@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in</title>
+    <style>
+    /* Put this CSS in your existing stylesheet if you prefer */
+    .rotating {
+      display: inline-block;            /* keep transform behavior consistent */
+      transform-origin: 50% 50%;        /* rotate around center */
+      --rotation-duration: 3s;          /* change to speed up/slow down */
+      animation: spin var(--rotation-duration) linear infinite;
+      will-change: transform;
+      cursor: pointer;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* If you want to respect users' reduced-motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      .rotating { animation: none !important; }
+    }
+ 
+</style>             
+</head>
+<body>
+    <center class="freezer"><img class="rotating"  src="freezer.webp" alt="freezing sign" width="200px" height="200px">
+    <h1>Freezing spun</h1></center>                               
+    <center><form action="/submit_signin" method="post">
+        Username:
+        <input type="text" id="username" name="username" required="required"><br><br>
+       Birthday:
+        <input type="datetime-local" id="birthday" name="birthday" required="required" placeholder="dd/mm/yyyy"><br><br>  
+
+        <legend>Sex</legend>
+        <select>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>    
+        </select><br><br>  
+        Email/phone:
+        <input type="text" id="username" name="username" required="required"><br><br>
+        Password:
+        <input type="password" id="password" name="password" required="required"><br><br>
+        <input type="submit" value="Sign In">
+    </form></center>
+</body>
+</html>

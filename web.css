@@ -1,0 +1,18 @@
+  /* Put this CSS in your existing stylesheet if you prefer */
+    .rotating {
+      display: inline-block;            /* keep transform behavior consistent */
+      transform-origin: 50% 50%;        /* rotate around center */
+      --rotation-duration: 3s;          /* change to speed up/slow down */
+      animation: spin var(--rotation-duration) linear infinite;
+      will-change: transform;
+      cursor: pointer;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* If you want to respect users' reduced-motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      .rotating { animation: none !important; }
+    }
