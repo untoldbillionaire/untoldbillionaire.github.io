@@ -30,6 +30,12 @@
     <center class="freezer"><img class="rotating"  src="freezer.webp" alt="freezing sign" width="200px" height="200px">
     <h1>Freezing spun</h1></center>                               
 
+ <!DOCTYPE html>
+<html>
+<head>
+  <title>Firebase Auth Example</title>
+</head>
+<body>
   <center>
     <!-- Sign Up Form -->
     <form id="signupForm">
@@ -40,6 +46,14 @@
       <input type="submit" value="Sign Up">
     </form>
 
+    <!-- Sign In Form -->
+    <form id="loginForm">
+      Email:
+      <input type="email" id="loginEmail" required><br><br>
+      Password:
+      <input type="password" id="loginPassword" required><br><br>
+      <input type="submit" value="Sign In">
+    </form>
 
     <!-- Dashboard -->
     <div id="dashboard" style="display:none; margin-top:20px;">
@@ -49,27 +63,24 @@
   </center>
 
   <script type="module">
-    // ✅ Import Firebase SDKs
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } 
       from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 
-    // ✅ Your Firebase config (replace with your actual values from Firebase Console)
     const firebaseConfig = {
       apiKey: "AIzaSyDWRSdDveag6AQIaCP4SR5X5caMyMiiktk",
       authDomain: "collection-abae0.firebaseapp.com",
       projectId: "collection-abae0",
-      storageBucket: "collection-abae0.appspot.com",  // corrected format
+      storageBucket: "collection-abae0.appspot.com",
       messagingSenderId: "721235736494",
       appId: "1:721235736494:web:8e81c5cf9cb633383cfa3f",
       measurementId: "G-ZCR2D4F94L"
     };
 
-    // ✅ Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // ✅ Sign Up
+    // ✅ Sign Up + Redirect
     document.getElementById("signupForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const email = document.getElementById("signupEmail").value;
@@ -77,14 +88,19 @@
 
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        alert("Account created for " + userCredential.user.email);
+        const user = userCredential.user;
+
+        alert("Account created for " + user.email);
+
+        // ✅ Redirect immediately after first sign‑up
+        window.location.href = "home.html";  // change to your actual home page file or URL
       } catch (error) {
         alert("Error: " + error.message);
       }
     });
 
     // ✅ Sign In + Redirect
-    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const email = document.getElementById("loginEmail").value;
       const password = document.getElementById("loginPassword").value;
@@ -93,12 +109,11 @@
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // Show dashboard with email (optional)
         document.getElementById("displayEmail").textContent = user.email;
         document.getElementById("dashboard").style.display = "block";
 
-        // ✅ Redirect to home page
-        window.location.href = "untold.html";  // change to your actual home page file or URL
+        // ✅ Redirect after login
+        window.location.href = "home.html";  // change to your actual home page file or URL
       } catch (error) {
         alert("Error: " + error.message);
       }
@@ -113,6 +128,8 @@
       }
     });
   </script>
+</body>
+</html>
 
 
 
@@ -120,6 +137,7 @@
 </body>
 
 </html>
+
 
 
 
