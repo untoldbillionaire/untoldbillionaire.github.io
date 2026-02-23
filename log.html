@@ -29,16 +29,75 @@
 <body>
     <center class="freezer"><img class="rotating"  src="freezer.webp" alt="freezing sign" width="200px" height="200px">
     <h1>Freezing spun</h1></center>                               
-    <center><form action="untoldbillionaire@gmail.com" method="post">
-        <p>Log in with username/ e-mail/phone:</p>
-        <br><br>
-        <input type="text" id="username/ e-mail/phone" name="username/ e-mail/phone" required="required"><br><br>
-  <br>  
-        Password:
-        <br>
-        <input type="password" id="password" name="password" required="required"><br><br>
-        <input type="submit" value="log in">
-    </form></center>
+
+  <center>
+    <!-- Sign In Form -->
+    <form id="loginForm">
+      Email:
+      <input type="email" id="loginEmail" required><br><br>
+      Password:
+      <input type="password" id="loginPassword" required><br><br>
+      <input type="submit" value="Sign In">
+    </form>
+
+    <!-- Dashboard (optional preview before redirect) -->
+    <div id="dashboard" style="display:none; margin-top:20px;">
+      <h2>Welcome Back!</h2>
+      <p><strong>Email:</strong> <span id="displayEmail"></span></p>
+    </div>
+  </center>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } 
+      from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+
+    // ✅ Your Firebase config (replace with your actual values from Firebase Console)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDWRSdDveag6AQIaCP4SR5X5caMyMiiktk",
+      authDomain: "collection-abae0.firebaseapp.com",
+      projectId: "collection-abae0",
+      storageBucket: "collection-abae0.appspot.com",  // corrected format
+      messagingSenderId: "721235736494",
+      appId: "1:721235736494:web:8e81c5cf9cb633383cfa3f",
+      measurementId: "G-ZCR2D4F94L"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // ✅ Sign In for existing users
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Show dashboard briefly (optional)
+        document.getElementById("displayEmail").textContent = user.email;
+        document.getElementById("dashboard").style.display = "block";
+
+        // ✅ Redirect to home page
+        window.location.href = "untold.html";  // change to your actual home page file or URL
+      } catch (error) {
+        alert("Error: " + error.message);
+      }
+    });
+
+    // ✅ Detect user state (optional)
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("User is signed in:", user.email);
+      } else {
+        console.log("No user signed in");
+      }
+    });
+  </script>
+
+
 </body>
 
 </html>
