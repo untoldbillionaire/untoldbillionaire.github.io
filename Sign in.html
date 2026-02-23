@@ -46,11 +46,36 @@
         Password:
         <input type="password" id="password" name="password" required="required"><br><br>
         <input type="hidden" name="_redirect" value="https://untoldbillionaire.github.io/untold.html">
+       
         <input type="submit" value="Submit">
     </form></center>
+    <script type="module">
+     // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDWRSdDveag6AQIaCP4SR5X5caMyMiiktk",
+  authDomain: "collection-abae0.firebaseapp.com",
+  projectId: "collection-abae0",
+  storageBucket: "collection-abae0.firebasestorage.app",
+  messagingSenderId: "721235736494",
+  appId: "1:721235736494:web:8e81c5cf9cb633383cfa3f",
+  measurementId: "G-ZCR2D4F94L"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+    </script>
 </body>
 
 </html>
+
 
 
 
