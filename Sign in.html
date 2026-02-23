@@ -29,17 +29,6 @@
 <body>
     <center class="freezer"><img class="rotating"  src="freezer.webp" alt="freezing sign" width="200px" height="200px">
     <h1>Freezing spun</h1></center>                               
-    <center>
-
-
-  <center>
-
-  <!DOCTYPE html>
-<html>
-<head>
-  <title>Firebase Sign In Example</title>
-</head>
-<body>
   <center>
     <!-- Sign In Form -->
     <form id="loginForm">
@@ -88,9 +77,12 @@
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // Show dashboard with email
+        // Show dashboard with email (optional)
         document.getElementById("displayEmail").textContent = user.email;
         document.getElementById("dashboard").style.display = "block";
+
+        // ✅ Redirect to home page
+        window.location.href = "home.html";  // change to your actual home page file or URL
       } catch (error) {
         alert("Error: " + error.message);
       }
@@ -105,13 +97,12 @@
       }
     });
   </script>
-</body>
-</html>
 
     
 </body>
 
 </html>
+
 
 
 
