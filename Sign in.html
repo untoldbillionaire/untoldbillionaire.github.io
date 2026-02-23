@@ -46,14 +46,6 @@
       <input type="submit" value="Sign Up">
     </form>
 
-    <!-- Sign In Form -->
-    <form id="loginForm">
-      Email:
-      <input type="email" id="loginEmail" required><br><br>
-      Password:
-      <input type="password" id="loginPassword" required><br><br>
-      <input type="submit" value="Sign In">
-    </form>
 
     <!-- Dashboard -->
     <div id="dashboard" style="display:none; margin-top:20px;">
@@ -93,14 +85,14 @@
         alert("Account created for " + user.email);
 
         // ✅ Redirect immediately after first sign‑up
-        window.location.href = "home.html";  // change to your actual home page file or URL
+        window.location.href = "untold.html";  // change to your actual home page file or URL
       } catch (error) {
         alert("Error: " + error.message);
       }
     });
 
     // ✅ Sign In + Redirect
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const email = document.getElementById("loginEmail").value;
       const password = document.getElementById("loginPassword").value;
@@ -113,7 +105,7 @@
         document.getElementById("dashboard").style.display = "block";
 
         // ✅ Redirect after login
-        window.location.href = "home.html";  // change to your actual home page file or URL
+        window.location.href = "untold.html";  // change to your actual home page file or URL
       } catch (error) {
         alert("Error: " + error.message);
       }
@@ -128,8 +120,6 @@
       }
     });
   </script>
-</body>
-</html>
 
 
 
@@ -137,6 +127,7 @@
 </body>
 
 </html>
+
 
 
 
