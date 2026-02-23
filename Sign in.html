@@ -30,11 +30,154 @@
     <center class="freezer"><img class="rotating"  src="freezer.webp" alt="freezing sign" width="200px" height="200px">
     <h1>Freezing spun</h1></center>                               
     <center>
-        
+
+
+  <center>
+    <!-- Sign Up Form -->
+    <form id="signupForm">
+      Username:
+      <input type="text" id="username" required><br><br>
+      Birthday:
+      <input type="date" id="birthday" required><br><br>
+      Sex:
+      <select id="sex">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+      </select><br><br>
+      Email:
+      <input type="email" id="email" required><br><br>
+      Password:
+      <input type="password" id="password" required><br><br>
+      <input type="submit" value="Sign Up">
+    </form>
+
+    <!-- Sign In Form -->
+    <form id="loginForm">
+      Email:
+      <input type="email" id="loginEmail" required><br><br>
+      Password:
+      <input type="password" id="loginPassword" required><br><br>
+      <input type="submit" value="Sign In">
+    </form>
+
+    <!-- Log Out Button -->
+    <button id="logoutBtn">Log Out</button>
+
+    <!-- Dashboard -->
+    <div id="dashboard" style="display:none; margin-top:20px;">
+      <h2>Welcome!</h2>
+      <p><strong>Username:</strong> <span id="displayUsername"></span></p>
+      <p><strong>Birthday:</strong> <span id="displayBirthday"></span></p>
+      <p><strong>Sex:</strong> <span id="displaySex"></span></p>
+      <p><strong>Email:</strong> <span id="displayEmail"></span></p>
+    </div>
+  </center>
+
+  <script type="module">
+    // ✅ Import Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } 
+      from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } 
+      from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+    // ✅ Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDWRSdDveag6AQIaCP4SR5X5caMyMiiktk",
+      authDomain: "collection-abae0.firebaseapp.com",
+      projectId: "collection-abae0",
+      storageBucket: "collection-abae0.firebasestorage.app",
+      messagingSenderId: "721235736494",
+      appId: "1:721235736494:web:8e81c5cf9cb633383cfa3f",
+      measurementId: "G-ZCR2D4F94L"
+    };
+
+    // ✅ Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // ✅ Sign Up
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const username = document.getElementById("username").value;
+      const birthday = document.getElementById("birthday").value;
+      const sex = document.getElementById("sex").value;
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        await setDoc(doc(db, "users", user.uid), {
+          username: username,
+          birthday: birthday,
+          sex: sex,
+          email: user.email
+        });
+
+        alert("Account created and details saved for " + user.email);
+      } catch (error) {
+        alert("Error: " + error.message);
+      }
+    });
+
+    // ✅ Sign In
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Load profile data from Firestore
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          document.getElementById("displayUsername").textContent = data.username;
+          document.getElementById("displayBirthday").textContent = data.birthday;
+          document.getElementById("displaySex").textContent = data.sex;
+          document.getElementById("displayEmail").textContent = data.email;
+
+          // Show dashboard
+          document.getElementById("dashboard").style.display = "block";
+        }
+      } catch (error) {
+        alert("Error: " + error.message);
+      }
+    });
+
+    // ✅ Log Out
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        alert("You have been signed out.");
+        document.getElementById("dashboard").style.display = "none";
+      } catch (error) {
+        alert("Error signing out: " + error.message);
+      }
+    });
+
+    // ✅ Detect user state
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("User is signed in:", user.email);
+      } else {
+        console.log("No user signed in");
+      }
+    });
+  </script>
+   
     
 </body>
 
 </html>
+
 
 
 
