@@ -45,36 +45,103 @@
         <input type="text" id="username" name="username" required="required"><br><br>
         Password:
         <input type="password" id="password" name="password" required="required"><br><br>
-        <input type="hidden" name="_redirect" value="https://untoldbillionaire.github.io/untold.html">
+       
        
         <input type="submit" value="Submit">
     </form></center>
     <script type="module">
-     // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+<center>
+  <form id="signupForm">
+    Email:
+    <input type="email" id="email" required><br><br>
+    Password:
+    <input type="password" id="password" required><br><br>
+    <input type="submit" value="Sign Up">
+  </form>
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDWRSdDveag6AQIaCP4SR5X5caMyMiiktk",
-  authDomain: "collection-abae0.firebaseapp.com",
-  projectId: "collection-abae0",
-  storageBucket: "collection-abae0.firebasestorage.app",
-  messagingSenderId: "721235736494",
-  appId: "1:721235736494:web:8e81c5cf9cb633383cfa3f",
-  measurementId: "G-ZCR2D4F94L"
-};
+  <form id="loginForm">
+    Email:
+    <input type="email" id="loginEmail" required><br><br>
+    Password:
+    <input type="password" id="loginPassword" required><br><br>
+    <input type="submit" value="Sign In">
+  </form>
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-    </script>
+  <button id="logoutBtn">Log Out</button>
+</center>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } 
+    from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDWRSdDveag6AQIaCP4SR5X5caMyMiiktk",
+    authDomain: "collection-abae0.firebaseapp.com",
+    projectId: "collection-abae0",
+    storageBucket: "collection-abae0.firebasestorage.app",
+    messagingSenderId: "721235736494",
+    appId: "1:721235736494:web:8e81c5cf9cb633383cfa3f",
+    measurementId: "G-ZCR2D4F94L"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // Sign Up
+  document.getElementById("signupForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        alert("Account created for " + userCredential.user.email);
+      })
+      .catch((error) => {
+        alert("Error: " + error.message);
+      });
+  });
+
+  // Sign In
+  document.getElementById("loginForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        alert("Signed in as " + userCredential.user.email);
+      })
+      .catch((error) => {
+        alert("Error: " + error.message);
+      });
+  });
+
+  // Log Out
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    signOut(auth).then(() => {
+      alert("You have been signed out.");
+    }).catch((error) => {
+      alert("Error signing out: " + error.message);
+    });
+  });
+
+  // Detect user state
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("User is signed in:", user.email);
+    } else {
+      console.log("No user signed in");
+    }
+  });
+</script>
+
+    
 </body>
 
 </html>
+
 
 
 
