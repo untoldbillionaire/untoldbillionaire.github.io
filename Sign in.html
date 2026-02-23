@@ -34,6 +34,13 @@
 
   <center>
 
+  <!DOCTYPE html>
+<html>
+<head>
+  <title>Firebase Sign In Example</title>
+</head>
+<body>
+  <center>
     <!-- Sign In Form -->
     <form id="loginForm">
       Email:
@@ -43,14 +50,9 @@
       <input type="submit" value="Sign In">
     </form>
 
-  
-
     <!-- Dashboard -->
     <div id="dashboard" style="display:none; margin-top:20px;">
       <h2>Welcome!</h2>
-      <p><strong>Username:</strong> <span id="displayUsername"></span></p>
-      <p><strong>Birthday:</strong> <span id="displayBirthday"></span></p>
-      <p><strong>Sex:</strong> <span id="displaySex"></span></p>
       <p><strong>Email:</strong> <span id="displayEmail"></span></p>
     </div>
   </center>
@@ -58,10 +60,8 @@
   <script type="module">
     // ✅ Import Firebase SDKs
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } 
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } 
       from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc } 
-      from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
     // ✅ Your Firebase config
     const firebaseConfig = {
@@ -77,33 +77,6 @@
     // ✅ Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    // ✅ Sign Up
-    document.getElementById("signupForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const username = document.getElementById("username").value;
-      const birthday = document.getElementById("birthday").value;
-      const sex = document.getElementById("sex").value;
-
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-
-        await setDoc(doc(db, "users", user.uid), {
-          username: username,
-          birthday: birthday,
-          sex: sex,
-          email: user.email
-        });
-
-        alert("Account created and details saved for " + user.email);
-      } catch (error) {
-        alert("Error: " + error.message);
-      }
-    });
 
     // ✅ Sign In
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
@@ -115,32 +88,11 @@
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // Load profile data from Firestore
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          document.getElementById("displayUsername").textContent = data.username;
-          document.getElementById("displayBirthday").textContent = data.birthday;
-          document.getElementById("displaySex").textContent = data.sex;
-          document.getElementById("displayEmail").textContent = data.email;
-
-          // Show dashboard
-          document.getElementById("dashboard").style.display = "block";
-        }
+        // Show dashboard with email
+        document.getElementById("displayEmail").textContent = user.email;
+        document.getElementById("dashboard").style.display = "block";
       } catch (error) {
         alert("Error: " + error.message);
-      }
-    });
-
-    // ✅ Log Out
-    document.getElementById("logoutBtn").addEventListener("click", async () => {
-      try {
-        await signOut(auth);
-        alert("You have been signed out.");
-        document.getElementById("dashboard").style.display = "none";
-      } catch (error) {
-        alert("Error signing out: " + error.message);
       }
     });
 
@@ -153,11 +105,14 @@
       }
     });
   </script>
-   
+</body>
+</html>
+
     
 </body>
 
 </html>
+
 
 
 
