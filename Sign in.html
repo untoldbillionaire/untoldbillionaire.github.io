@@ -29,15 +29,17 @@
 <body>
     <center class="freezer"><img class="rotating"  src="freezer.webp" alt="freezing sign" width="200px" height="200px">
     <h1>Freezing spun</h1></center>                               
+
   <center>
-    <!-- Sign In Form -->
-    <form id="loginForm">
+    <!-- Sign Up Form -->
+    <form id="signupForm">
       Email:
-      <input type="email" id="loginEmail" required><br><br>
+      <input type="email" id="signupEmail" required><br><br>
       Password:
-      <input type="password" id="loginPassword" required><br><br>
-      <input type="submit" value="Sign In">
+      <input type="password" id="signupPassword" required><br><br>
+      <input type="submit" value="Sign Up">
     </form>
+
 
     <!-- Dashboard -->
     <div id="dashboard" style="display:none; margin-top:20px;">
@@ -49,15 +51,15 @@
   <script type="module">
     // ✅ Import Firebase SDKs
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } 
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } 
       from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 
-    // ✅ Your Firebase config
+    // ✅ Your Firebase config (replace with your actual values from Firebase Console)
     const firebaseConfig = {
       apiKey: "AIzaSyDWRSdDveag6AQIaCP4SR5X5caMyMiiktk",
       authDomain: "collection-abae0.firebaseapp.com",
       projectId: "collection-abae0",
-      storageBucket: "collection-abae0.firebasestorage.app",
+      storageBucket: "collection-abae0.appspot.com",  // corrected format
       messagingSenderId: "721235736494",
       appId: "1:721235736494:web:8e81c5cf9cb633383cfa3f",
       measurementId: "G-ZCR2D4F94L"
@@ -67,7 +69,21 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // ✅ Sign In
+    // ✅ Sign Up
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPassword").value;
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        alert("Account created for " + userCredential.user.email);
+      } catch (error) {
+        alert("Error: " + error.message);
+      }
+    });
+
+    // ✅ Sign In + Redirect
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const email = document.getElementById("loginEmail").value;
@@ -82,7 +98,7 @@
         document.getElementById("dashboard").style.display = "block";
 
         // ✅ Redirect to home page
-        window.location.href = "untold.html";  // change to your actual home page file or URL
+        window.location.href = "home.html";  // change to your actual home page file or URL
       } catch (error) {
         alert("Error: " + error.message);
       }
@@ -98,10 +114,13 @@
     });
   </script>
 
+
+
     
 </body>
 
 </html>
+
 
 
 
