@@ -2,6 +2,7 @@
   "id": "com.github.username.untoldbillionaire",
   "name": "Untold Billionaire",
   "short_name": "UTB",
+  "scope": "/"
   "description": "Untold Billionaire is a platform to explore, create, and share inspiring content.",
   "start_url": "index.html",
   "display": "standalone",
