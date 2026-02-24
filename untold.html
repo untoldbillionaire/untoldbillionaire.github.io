@@ -1,59 +1,98 @@
 <!doctype html>
 <html>
 <head lang="eng">
-<title>untoldbillionaire.com</title>
-<!---All rigth reserved no part of this code may be copied.Visit view-source:file:///C:/Users/USER/Desktop/untold.html for authorize copying. Ts & Cs apply.---!>  
-<style>
-body{
-background-color: powderblue;
-font-style: gourgia;
-}
-ul{
-margin: 4px 0px;
-decoration: none;
-}
-li{
-padding: 0px 5px;
-margin: 3px 0px;
-list-style-type: none;
-float: left;
-decoration: none;
-}
-.home-btn{
-decoration-type: none;
-}
-.search-bar{
-width: 50px;
-border: 2px;
-border-radius: 10px;
-background-color: red;
-box-shadow: 1.5px 1.5px;
-opacity: 0.5;
-transition: 5s;
-cursor: pionter;
-}
-.search-bar:hover{
-width: 300px;
-transition: 2s;
-transition-delay: 0.1s;
-cursor: pionter;
-}
-.search-btn{
-border: 0.5px solid black;
-border-radius: 20px;
-}
-</style>
+  <meta charset="UTF-8">
+  <title>untoldbillionaire.com</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!---All rigth reserved no part of this code may be copied.Visit view-source:file:///C:/Users/USER/Desktop/untold.html for authorize copying. Ts & Cs apply.---!>  
+  <style>
+    body {
+      background-color: powderblue;
+      font-family: Georgia, serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    ul {
+      margin: 0;
+      padding: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      background-color: #fff;
+    }
+
+    li {
+      list-style-type: none;
+      margin: 5px;
+    }
+
+    a.home-btn {
+      text-decoration: none;
+      padding: 8px 12px;
+      background-color: #eee;
+      border-radius: 5px;
+      color: black;
+    }
+
+    a.home-btn:hover {
+      background-color: #ddd;
+    }
+
+    .search-bar {
+      width: 120px;
+      max-width: 80%;
+      border: 2px solid black;
+      border-radius: 10px;
+      background-color: red;
+      box-shadow: 1.5px 1.5px;
+      opacity: 0.8;
+      transition: width 0.5s;
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    .search-bar:hover {
+      width: 60%;
+    }
+
+    .search-btn {
+      border: 1px solid black;
+      border-radius: 20px;
+      padding: 5px 10px;
+      margin-left: 5px;
+      cursor: pointer;
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+      ul {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      li {
+        margin: 5px 0;
+      }
+      .search-bar {
+        width: 100%;
+        max-width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-<ul>
-<li><a class="home-btn" href="doc1">Home</a></li>
-<li><a class="home-btn" href="doc1">Menu</a></li>
-<li><a class="home-btn" href="doc1">Explore</a></li>
-<li><a class="home-btn" href="doc1">Find</a></li>
-<li><a class="home-btn" href="doc1">Create</a></li>
-<li><a class="home-btn" href="doc1">Read</a></li>
-<li><a class="home-btn" href="file:///C:/Users/USER/Downloads/UTBillionaire/help.html">Help</a></li>
-<li><input class="search-bar" type="search"><button class="search-btn">search</button></li>
-</ul><br><p><hr></p>
+  <ul>
+    <li><a class="home-btn" href="doc1">Home</a></li>
+    <li><a class="home-btn" href="doc1">Menu</a></li>
+    <li><a class="home-btn" href="doc1">Explore</a></li>
+    <li><a class="home-btn" href="doc1">Find</a></li>
+    <li><a class="home-btn" href="doc1">Create</a></li>
+    <li><a class="home-btn" href="doc1">Read</a></li>
+    <li><a class="home-btn" href="file:///C:/Users/USER/Downloads/UTBillionaire/help.html">Help</a></li>
+    <li>
+      <input class="search-bar" type="search" placeholder="Search...">
+      <button class="search-btn">Search</button>
+    </li>
+  </ul>
+  <hr>
 </body>
 </html>
