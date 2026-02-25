@@ -1,1 +1,103 @@
+<center>
+  <!-- Sign Up Form -->
+  <form id="signupForm">
+    Email:
+    <input type="email" id="signupEmail" required><br><br>
+    Password:
+    <input type="password" id="signupPassword" required><br><br>
+    <input type="submit" value="Sign Up">
+  </form>
+
+  <!-- Login Form -->
+  <form id="loginForm" style="margin-top:20px;">
+    Email:
+    <input type="email" id="loginEmail" required><br><br>
+    Password:
+    <input type="password" id="loginPassword" required><br><br>
+    <input type="submit" value="Login">
+  </form>
+
+  <!-- Dashboard -->
+  <div id="dashboard" style="display:none; margin-top:20px;">
+    <h2>Welcome!</h2>
+    <p><strong>Email:</strong> <span id="displayEmail"></span></p>
+  </div>
+</center>
+
+<script type="module">
+  // ✅ Import Firebase SDKs
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } 
+    from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+
+  // ✅ Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyDWRSdDveag6AQIaCP4SR5X5caMyMiiktk",
+    authDomain: "collection-abae0.firebaseapp.com",
+    projectId: "collection-abae0",
+    storageBucket: "collection-abae0.appspot.com",
+    messagingSenderId: "721235736494",
+    appId: "1:721235736494:web:8e81c5cf9cb633383cfa3f",
+    measurementId: "G-ZCR2D4F94L"
+  };
+
+  // ✅ Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // ✅ Sign Up
+  document.getElementById("signupForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("signupEmail").value;
+    const password = document.getElementById("signupPassword").value;
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      alert("Account created for " + userCredential.user.email);
+    } catch (error) {
+      alert("Error: " + error.message);
+    }
+  });
+
+  // ✅ Login
+  document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Show dashboard
+      document.getElementById("displayEmail").textContent = user.email;
+      document.getElementById("dashboard").style.display = "block";
+
+      // ✅ Redirect to home page
+      window.location.href = "untold.html";
+    } catch (error) {
+      alert("Error: " + error.message);
+    }
+  });
+
+  // ✅ Auto-login using Firebase session tokens
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      console.log("User is signed in:", user.email);
+
+      // Get ID token (short-lived access token)
+      const idToken = await user.getIdToken();
+
+      // Firebase automatically refreshes tokens using its refresh token
+      // You can send idToken to your backend for secure API calls
+      console.log("Access Token:", idToken);
+
+      // Show dashboard
+      document.getElementById("displayEmail").textContent = user.email;
+      document.getElementById("dashboard").style.display = "block";
+    } else {
+      console.log("No user signed in");
+    }
+  });
+</script>
 
