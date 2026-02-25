@@ -121,13 +121,18 @@
     </li>
   </ul>
   <hr>
-    <!-- 🔹 Permanent navigation arrows -->
-  <div class="nav-arrows">
-    <button id="backBtn">←</button>
-    <button id="forwardBtn">→</button>
-  </div>
+    <script>
+    // 🔹 Navigation arrows functionality
+    document.getElementById("backBtn").addEventListener("click", () => {
+      window.history.back();
+    });
+    document.getElementById("forwardBtn").addEventListener("click", () => {
+      window.history.forward();
+    });
+  </script>
 </body>
 </html>
+
 
 
 
