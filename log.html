@@ -1,34 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign in</title>
-    <style>
-    /* Put this CSS in your existing stylesheet if you prefer */
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in</title>
+  <style>
     .rotating {
-      display: inline-block;            /* keep transform behavior consistent */
-      transform-origin: 50% 50%;        /* rotate around center */
-      --rotation-duration: 3s;          /* change to speed up/slow down */
+      display: inline-block;
+      transform-origin: 50% 50%;
+      --rotation-duration: 3s;
       animation: spin var(--rotation-duration) linear infinite;
       will-change: transform;
       cursor: pointer;
     }
-
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
-
-    /* If you want to respect users' reduced-motion preference */
     @media (prefers-reduced-motion: single-animation) {
       .rotating { animation: none !important; }
     }
- 
-</style>             
+  </style>
 </head>
 <body>
-    <center class="freezer"><img class="rotating"  src="freezer.webp" alt="freezing sign" width="200px" height="200px">
-    <h1>Freezing spun</h1></center>                               
+  <center class="freezer">
+    <img class="rotating" src="freezer.webp" alt="freezing sign" width="200px" height="200px">
+    <h1>Freezing spun</h1>
+  </center>
 
   <center>
     <!-- Sign In Form -->
@@ -38,12 +35,11 @@
       Password:
       <input type="password" id="loginPassword" required><br><br>
       <input type="submit" value="Sign In">
-        <br>
-        <br>
-        <a href="forgot password">Forgot password</a>
+      <br><br>
+      <a href="#">Forgot password</a>
     </form>
 
-    <!-- Dashboard (optional preview before redirect) -->
+    <!-- Dashboard -->
     <div id="dashboard" style="display:none; margin-top:20px;">
       <h2>Welcome Back!</h2>
       <p><strong>Email:</strong> <span id="displayEmail"></span></p>
@@ -55,12 +51,11 @@
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } 
       from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 
-    // ✅ Your Firebase config (replace with your actual values from Firebase Console)
     const firebaseConfig = {
       apiKey: "AIzaSyDWRSdDveag6AQIaCP4SR5X5caMyMiiktk",
       authDomain: "collection-abae0.firebaseapp.com",
       projectId: "collection-abae0",
-      storageBucket: "collection-abae0.appspot.com",  // corrected format
+      storageBucket: "collection-abae0.appspot.com",
       messagingSenderId: "721235736494",
       appId: "1:721235736494:web:8e81c5cf9cb633383cfa3f",
       measurementId: "G-ZCR2D4F94L"
@@ -69,7 +64,7 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // ✅ Sign In for existing users
+    // ✅ Sign In
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const email = document.getElementById("loginEmail").value;
@@ -79,44 +74,37 @@
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // Show dashboard briefly (optional)
         document.getElementById("displayEmail").textContent = user.email;
         document.getElementById("dashboard").style.display = "block";
 
-        // ✅ Redirect to home page
-        window.location.href = "untold.html";  // change to your actual home page file or URL
+        // Redirect after login
+        window.location.href = "untold.html";
       } catch (error) {
         alert("Error: " + error.message);
       }
     });
 
-    // ✅ Detect user state (optional)
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log("User is signed in:", user.email);
-      } else {
-        console.log("No user signed in");
-      }
-    });
-      // ✅ Auto-login using Firebase session tokens
+    // ✅ Auto-login using Firebase session tokens
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         console.log("User is signed in:", user.email);
 
-        // Get ID token (short-lived access token)
-        const idToken = await user.getIdToken();
-        console.log("Access Token:", idToken);
+        // Hide login form if already signed in
+        document.getElementById("loginForm").style.display = "none";
 
         // Show dashboard
         document.getElementById("displayEmail").textContent = user.email;
         document.getElementById("dashboard").style.display = "block";
+
+        // Optional: redirect straight to home page
+        window.location.href = "untold.html";
       } else {
         console.log("No user signed in");
+        // Show login form if no session
+        document.getElementById("loginForm").style.display = "block";
+        document.getElementById("dashboard").style.display = "none";
       }
     });
   </script>
-
-
 </body>
-
 </html>
