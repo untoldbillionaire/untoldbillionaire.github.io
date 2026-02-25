@@ -92,13 +92,13 @@
       opacity: 1;
     }
 
-   /* 🔹 Profile upload area */
+ /* 🔹 Profile upload area */
 .profile-upload img {
-  width: 100px;
+  width: 100px;             /* equal width and height for a circle */
   height: 100px;
-  border-radius: 15px;
-  object-fit: cover;
-  border: 2px solid #333;
+  border-radius: 50%;       /* makes the image container circular */
+  object-fit: cover;        /* ensures the image fills the circle */
+  border: 2px solid #333;   /* optional border around the circle */
 }
 
 .profile-upload input {
@@ -108,15 +108,10 @@
 .upload-label {
   background: #333;
   color: white;
-  width: 40px;              /* equal width and height */
-  height: 40px;
-  border-radius: 50%;       /* makes it a perfect circle */
-  display: flex;            /* centers content */
-  align-items: center;
-  justify-content: center;
+  padding: 5px 10px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 14px;
 }
 
   </style>
@@ -196,5 +191,6 @@
   </script>
 </body>
 </html>
+
 
 
