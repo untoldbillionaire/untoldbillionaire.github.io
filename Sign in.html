@@ -119,6 +119,22 @@
         console.log("No user signed in");
       }
     });
+       // ✅ Auto-login using Firebase session tokens
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        console.log("User is signed in:", user.email);
+
+        // Get ID token (short-lived access token)
+        const idToken = await user.getIdToken();
+        console.log("Access Token:", idToken);
+
+        // Show dashboard
+        document.getElementById("displayEmail").textContent = user.email;
+        document.getElementById("dashboard").style.display = "block";
+      } else {
+        console.log("No user signed in");
+      }
+    });
   </script>
 
 
@@ -127,6 +143,7 @@
 </body>
 
 </html>
+
 
 
 
