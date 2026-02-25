@@ -92,28 +92,41 @@
       opacity: 1;
     }
 
- /* 🔹 Profile upload area */
-.profile-upload img {
-  width: 100px;             /* equal width and height for a circle */
-  height: 100px;
-  border-radius: 20px;       /* makes the image container circular */
-  object-fit: cover;        /* ensures the image fills the circle */
-  border: 2px solid #333;   /* optional border around the circle */
-}
+    /* 🔹 Profile upload area */
+    .profile-upload {
+      position: relative; /* allows overlay positioning */
+      width: 100px;
+      height: 100px;
+    }
 
-.profile-upload input {
-  display: none;
-}
+    .profile-upload img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;       /* makes the image circular */
+      object-fit: cover;
+      border: 2px solid #333;
+    }
 
-.upload-label {
-  background: #333;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-}
+    .profile-upload input {
+      display: none;
+    }
 
+    .upload-label {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background: #333;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;       /* circular overlay */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -123,7 +136,7 @@
       <div class="profile-upload">
         <img id="profilePic" src="default-avatar.png" alt="Profile">
         <input type="file" id="uploadInput" accept="image/*">
-        <label for="uploadInput" class="upload-label">Upload</label>
+        <label for="uploadInput" class="upload-label">+</label>
       </div>
       <div class="nav-arrows">
         <button id="backBtn">←</button>
@@ -191,6 +204,7 @@
   </script>
 </body>
 </html>
+
 
 
 
