@@ -94,9 +94,9 @@
 
     /* 🔹 Profile upload area */
     .profile-upload img {
-      width: 100px;
-      height: 100px;
-      border-radius: 15px;
+      width: 40px;
+      height: 40px;
+      border-radius: 0px;
       object-fit: cover;
       border: 2px solid #333;
     }
@@ -158,9 +158,15 @@
       window.history.forward();
     });
 
-    // 🔹 Profile picture upload preview
+    // 🔹 Profile picture upload preview + persistence
     const uploadInput = document.getElementById("uploadInput");
     const profilePic = document.getElementById("profilePic");
+
+    // Load saved profile picture from localStorage
+    const savedPic = localStorage.getItem("profilePic");
+    if (savedPic) {
+      profilePic.src = savedPic;
+    }
 
     uploadInput.addEventListener("change", (event) => {
       const file = event.target.files[0];
@@ -168,6 +174,8 @@
         const reader = new FileReader();
         reader.onload = (e) => {
           profilePic.src = e.target.result;
+          // Save to localStorage
+          localStorage.setItem("profilePic", e.target.result);
         };
         reader.readAsDataURL(file);
       }
@@ -182,18 +190,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
