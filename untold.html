@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>untoldbillionaire.com</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!---All rigth reserved no part of this code may be copied.Visit view-source:file:///C:/Users/USER/Desktop/untold.html for authorize copying. Ts & Cs apply.---!>  
   <style>
     body {
       background-color: powderblue;
@@ -40,7 +39,6 @@
 
     .search-bar {
       width: 120px;
-      max-width: 80%;
       border: 2px solid black;
       border-radius: 25px;
       background-color: red;
@@ -51,38 +49,34 @@
     }
 
     .search-bar:hover {
-      width: 60%;
+      width: 200px;
     }
 
     .search-btn {
       border: 1px solid black;
       border-radius: 20px;
       cursor: pointer;
+      padding: 5px 10px;
+      margin-left: 5px;
     }
 
-    /* Mobile adjustments */
-    @media (max-width: 600px) {
-      ul {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      li {
-        margin: 5px 0;
-      }
-      .search-bar {
-        width: 100%;
-        max-width: 100%;
-      }
+    /* 🔹 Header container for arrows + search */
+    .header-bar {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      display: flex;
+      justify-content: space-between; /* arrows left, search right */
+      align-items: center;
+      z-index: 9999;
     }
-    /* 🔹 Navigation arrows */
+
     .nav-arrows {
-      position: fixed;   /* stays in place permanently */
-      top: 10px;         /* very top */
-      left: 10px;        /* very left */
       display: flex;
       gap: 10px;
-      z-index: 9999;     /* always on top */
     }
+
     .nav-arrows button {
       background: #333;
       color: white;
@@ -93,20 +87,27 @@
       border-radius: 4px;
       opacity: 0.8;
     }
+
     .nav-arrows button:hover {
       opacity: 1;
     }
   </style>
 </head>
 <body>
-    <!-- 🔹 Permanent navigation arrows -->
-  <div class="nav-arrows">
-    <button id="backBtn">←</button>
-    <button id="forwardBtn">→</button>
+  <!-- 🔹 Header with arrows (left) and search (right) -->
+  <div class="header-bar">
+    <div class="nav-arrows">
+      <button id="backBtn">←</button>
+      <button id="forwardBtn">→</button>
+    </div>
+    <div class="search-container">
+      <input class="search-bar" type="search" placeholder="Search...">
+      <button class="search-btn">Search</button>
+    </div>
   </div>
-  <br>
-  <br>
-  <br>
+
+  <br><br><br><br> <!-- spacing so content isn't hidden under fixed header -->
+
   <ul>
     <li><a class="home-btn" href="doc1">Home</a></li>
     <li><a class="home-btn" href="doc1">Menu</a></li>
@@ -115,13 +116,10 @@
     <li><a class="home-btn" href="doc1">Create</a></li>
     <li><a class="home-btn" href="doc1">Read</a></li>
     <li><a class="home-btn" href="help.html">Help</a></li>
-    <li>
-      <input class="search-bar" type="search" placeholder="Search...">
-      <button class="search-btn">Search</button>
-    </li>
   </ul>
   <hr>
-    <script>
+
+  <script>
     // 🔹 Navigation arrows functionality
     document.getElementById("backBtn").addEventListener("click", () => {
       window.history.back();
@@ -129,9 +127,17 @@
     document.getElementById("forwardBtn").addEventListener("click", () => {
       window.history.forward();
     });
+
+    // 🔹 Search button functionality (example)
+    document.querySelector(".search-btn").addEventListener("click", () => {
+      const query = document.querySelector(".search-bar").value;
+      alert("Searching for: " + query);
+      // Replace with your actual search logic
+    });
   </script>
 </body>
 </html>
+
 
 
 
