@@ -74,9 +74,38 @@
         max-width: 100%;
       }
     }
+   <style>
+    /* 🔹 Navigation arrows */
+    .nav-arrows {
+      position: fixed;   /* stays in place permanently */
+      top: 10px;         /* very top */
+      left: 10px;        /* very left */
+      display: flex;
+      gap: 10px;
+      z-index: 9999;     /* always on top */
+    }
+    .nav-arrows button {
+      background: #333;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 4px;
+      opacity: 0.8;
+    }
+    .nav-arrows button:hover {
+      opacity: 1;
+    }
+  </style>
   </style>
 </head>
 <body>
+    <!-- 🔹 Permanent navigation arrows -->
+  <div class="nav-arrows">
+    <button id="backBtn">←</button>
+    <button id="forwardBtn">→</button>
+  </div>
   <ul>
     <li><a class="home-btn" href="doc1">Home</a></li>
     <li><a class="home-btn" href="doc1">Menu</a></li>
@@ -91,7 +120,13 @@
     </li>
   </ul>
   <hr>
+    <!-- 🔹 Permanent navigation arrows -->
+  <div class="nav-arrows">
+    <button id="backBtn">←</button>
+    <button id="forwardBtn">→</button>
+  </div>
 </body>
 </html>
+
 
 
