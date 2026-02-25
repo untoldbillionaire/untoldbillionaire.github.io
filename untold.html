@@ -38,11 +38,11 @@
     }
 
     .search-bar {
-      width: 1090px;
+      width: 250px;
       border: 2px solid black;
       border-radius: 25px;
       background-color: #FFFFFF;
-      opacity: 0.8;
+      opacity: 0.9;
       padding: 5px;
     }
 
@@ -64,6 +64,7 @@
       justify-content: space-between;
       align-items: center;
       z-index: 9999;
+      padding: 0 10px;
     }
 
     .left-section {
@@ -82,10 +83,10 @@
       color: white;
       border: none;
       padding: 6px 10px;
-      font-size: 18px;
+      font-size: 16px;
       cursor: pointer;
       border-radius: 4px;
-      opacity: 0.8;
+      opacity: 0.85;
     }
 
     .nav-arrows button:hover {
@@ -94,15 +95,15 @@
 
     /* 🔹 Profile upload area */
     .profile-upload {
-      position: relative; /* allows overlay positioning */
-      width: 100px;
-      height: 100px;
+      position: relative;
+      width: 70px;
+      height: 70px;
     }
 
     .profile-upload img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;       /* makes the image circular */
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;       /* circular avatar */
       object-fit: cover;
       border: 2px solid #333;
     }
@@ -117,15 +118,33 @@
       right: 0;
       background: #333;
       color: white;
-      width: 20px;
-      height: 20px;
-      border-radius: 20px;       /* circular overlay */
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;       /* circular overlay */
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: bold;
+      line-height: 1;
+    }
+
+    /* 🔹 Mobile adjustments */
+    @media (max-width: 600px) {
+      .header-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .search-container {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+      }
+      .search-bar {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -148,6 +167,7 @@
       <button class="search-btn">Search</button>
     </div>
   </div>
+
   <br><br><br><br><br><br><br>  <!-- spacing so content isn't hidden under fixed header -->
 
   <ul>
@@ -202,6 +222,7 @@
   </script>
 </body>
 </html>
+
 
 
 
