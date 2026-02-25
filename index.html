@@ -1,24 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#87CEEB">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Git</title>
-    <link rel="stylesheet" href="web.css">            
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#87CEEB">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Git</title>
+  <link rel="stylesheet" href="web.css">            
+  <style>
+    /* 🔹 Navigation arrows */
+    .nav-arrows {
+      position: fixed;   /* stays in place permanently */
+      top: 10px;         /* very top */
+      left: 10px;        /* very left */
+      display: flex;
+      gap: 10px;
+      z-index: 9999;     /* always on top */
+    }
+    .nav-arrows button {
+      background: #333;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 4px;
+      opacity: 0.8;
+    }
+    .nav-arrows button:hover {
+      opacity: 1;
+    }
+  </style>
 </head>
 <body>
-    <center class="freezer"><img class="rotating"  src="freezer.webp" alt="freezing sign" width="200px" height="200px">
-    <h1>Freezing spun</h1></center>
-   <center> <a href="Sign in.html">Sign in</a><br>
-    <a href="log.html">Log in</a></center>
+  <!-- 🔹 Permanent navigation arrows -->
+  <div class="nav-arrows">
+    <button id="backBtn">←</button>
+    <button id="forwardBtn">→</button>
+  </div>
+
+  <center class="freezer">
+    <img class="rotating" src="freezer.webp" alt="freezing sign" width="200px" height="200px">
+    <h1>Freezing spun</h1>
+  </center>
+
+  <center>
+    <a href="Sign in.html">Sign in</a><br>
+    <a href="log.html">Log in</a>
+  </center>
+
+  <script>
+    // 🔹 Navigation arrows functionality
+    document.getElementById("backBtn").addEventListener("click", () => {
+      window.history.back();
+    });
+    document.getElementById("forwardBtn").addEventListener("click", () => {
+      window.history.forward();
+    });
+  </script>
 </body>
 </html>
 
 
 
    
+
 
 
 
