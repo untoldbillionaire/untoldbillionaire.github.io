@@ -11,7 +11,7 @@
     .sidebar ul { list-style: none; padding: 0; }
     .sidebar li { margin: 5px 0; display: flex; align-items: center; justify-content: space-between; }
     .sidebar img { width: 30px; height: 30px; border-radius: 50%; margin-right: 8px; }
-    .sidebar button { padding: 4px 8px; border: none; border-radius: 4px; background: #4285F4; color: #fff; cursor: pointer; }
+    .sidebar button { padding: 4px 8px; border: none; border-radius: 4px; background: #4285F4; color: #fff; cursor: pointer; margin-left: 5px; }
     .sidebar button:hover { background: #357AE8; }
 
     .main { flex: 1; }
@@ -34,6 +34,8 @@
   <div class="sidebar">
     <h3>Users</h3>
     <ul id="userList"></ul>
+    <h3>Friends</h3>
+    <ul id="friendList"></ul>
   </div>
 
   <div class="main">
@@ -59,7 +61,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, serverTimestamp, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, doc, setDoc, addDoc, getDoc, onSnapshot, serverTimestamp, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
     // 🔹 Firebase config
@@ -84,6 +86,7 @@
     const logoutBtn = document.getElementById("logoutBtn");
     const userInfo = document.getElementById("userInfo");
     const userList = document.getElementById("userList");
+    const friendList = document.getElementById("friendList");
     const profilePic = document.getElementById("profilePic");
     const profileUpload = document.getElementById("profileUpload");
     const messagesDiv = document.getElementById("messages");
@@ -125,12 +128,14 @@
         profilePic.src = user.photoURL || "default-avatar.png";
 
         loadUsers();
+        loadFriends();
       } else {
         currentUser = null;
         loginBtn.style.display = "inline-block";
         logoutBtn.style.display = "none";
         userInfo.textContent = "";
         userList.innerHTML = "";
+        friendList.innerHTML = "";
         messagesDiv.innerHTML = "";
         profilePic.src = "default-avatar.png";
       }
@@ -162,17 +167,10 @@
           if (docSnap.id !== currentUser.uid) {
             const li = document.createElement("li");
             li.innerHTML = `<img src="${u.photoURL || 'default-avatar.png'}"> ${u.displayName}`;
-            const btn = document.createElement("button");
-            btn.textContent = "Chat";
-            btn.onclick = () => {
-              selectedFriendId = docSnap.id;
-              loadMessages();
-            };
-            li.appendChild(btn);
-            userList.appendChild(li);
+            
+            const chatBtn = document.create;
           }
         });
-      });
-    }
-
-    // Load messages with selected friend
+              </script>
+</body>
+</html>
