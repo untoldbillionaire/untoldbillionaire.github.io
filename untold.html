@@ -54,7 +54,6 @@
       margin-left: 5px;
     }
 
-    /* 🔹 Header container for profile + arrows + search */
     .header-bar {
       position: fixed;
       top: 10px;
@@ -93,7 +92,6 @@
       opacity: 1;
     }
 
-    /* 🔹 Profile upload area */
     .profile-upload {
       position: relative;
       width: 70px;
@@ -103,7 +101,7 @@
     .profile-upload img {
       width: 70px;
       height: 70px;
-      border-radius: 50%;       /* circular avatar */
+      border-radius: 50%;
       object-fit: cover;
       border: 2px solid #333;
     }
@@ -120,7 +118,7 @@
       color: white;
       width: 22px;
       height: 22px;
-      border-radius: 50%;       /* circular overlay */
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -130,7 +128,6 @@
       line-height: 1;
     }
 
-    /* 🔹 Mobile adjustments */
     @media (max-width: 600px) {
       .header-bar {
         flex-direction: column;
@@ -149,7 +146,6 @@
   </style>
 </head>
 <body>
-  <!-- 🔹 Header with profile (extreme left), arrows (next), search (right) -->
   <div class="header-bar">
     <div class="left-section">
       <div class="profile-upload">
@@ -168,11 +164,11 @@
     </div>
   </div>
 
-  <br><br><br><br><br><br><br>  <!-- spacing so content isn't hidden under fixed header -->
+  <br><br><br><br><br><br><br>
 
   <ul>
     <li><a class="home-btn" href="doc1">Home</a></li>
-    <li><a class="home-btn" href="chat.html">Chat</a></li>
+    <li><a class="home-btn" href="doc1">Menu</a></li>
     <li><a class="home-btn" href="doc1">Explore</a></li>
     <li><a class="home-btn" href="doc1">Find</a></li>
     <li><a class="home-btn" href="doc1">Create</a></li>
@@ -181,8 +177,67 @@
   </ul>
   <hr>
 
-  <script>
-    // 🔹 Navigation arrows functionality
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, updateProfile } 
+      from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } 
+      from "https://www.gstatic.com/firebasejs/11.0.0/firebase-storage.js";
+    import { getFirestore, doc, setDoc, getDoc } 
+      from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+    // ✅ Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDWRSdDveag6AQIaCP4SR5X5caMyMiiktk",
+      authDomain: "collection-abae0.firebaseapp.com",
+      projectId: "collection-abae0",
+      storageBucket: "collection-abae0.appspot.com",
+      messagingSenderId: "721235736494",
+      appId: "1:721235736494:web:8e81c5cf9cb633383cfa3f",
+      measurementId: "G-ZCR2D4F94L"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const storage = getStorage(app);
+    const db = getFirestore(app);
+
+    const uploadInput = document.getElementById("uploadInput");
+    const profilePic = document.getElementById("profilePic");
+
+    // Load profile picture when user logs in
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        if (user.photoURL) {
+          profilePic.src = user.photoURL;
+        } else {
+          const docSnap = await getDoc(doc(db, "users", user.uid));
+          if (docSnap.exists() && docSnap.data().photoURL) {
+            profilePic.src = docSnap.data().photoURL;
+          }
+        }
+      } else {
+        profilePic.src = "default-avatar.png";
+      }
+    });
+
+    // Upload new profile picture
+    uploadInput.addEventListener("change", async (event) => {
+      const file = event.target.files[0];
+      const user = auth.currentUser;
+      if (!file || !user) return;
+
+      const storageRef = ref(storage, `profilePics/${user.uid}`);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+
+      await updateProfile(user, { photoURL: url });
+      await setDoc(doc(db, "users", user.uid), { photoURL: url }, { merge: true });
+
+      profilePic.src = url;
+    });
+
+    // Navigation arrows
     document.getElementById("backBtn").addEventListener("click", () => {
       window.history.back();
     });
@@ -190,52 +245,11 @@
       window.history.forward();
     });
 
-    // 🔹 Profile picture upload preview + persistence
-    const uploadInput = document.getElementById("uploadInput");
-    const profilePic = document.getElementById("profilePic");
-
-    // Load saved profile picture from localStorage
-    const savedPic = localStorage.getItem("profilePic");
-    if (savedPic) {
-      profilePic.src = savedPic;
-    }
-
-    uploadInput.addEventListener("change", (event) => {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          profilePic.src = e.target.result;
-          // Save to localStorage
-          localStorage.setItem("profilePic", e.target.result);
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    // 🔹 Search button functionality (example)
+    // Search button
     document.querySelector(".search-btn").addEventListener("click", () => {
       const query = document.querySelector(".search-bar").value;
       alert("Searching for: " + query);
-      // Replace with your actual search logic
     });
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
