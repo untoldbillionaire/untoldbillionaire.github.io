@@ -5,8 +5,20 @@
   <title>untoldbillionaire.com - Chat</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { background-color: powderblue; font-family: Georgia, serif; margin: 0; padding: 0; }
-    .chat-container { max-width: 600px; margin: 120px auto 20px auto; background: #fff; border-radius: 10px; padding: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    body { background-color: powderblue; font-family: Georgia, serif; margin: 0; padding: 0; display: flex; }
+    .sidebar { width: 220px; background: #fff; padding: 10px; border-right: 1px solid #ccc; }
+    .sidebar h3 { margin-top: 0; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar li { margin: 5px 0; display: flex; justify-content: space-between; align-items: center; }
+    .sidebar button { padding: 4px 8px; border: none; border-radius: 4px; background: #4285F4; color: #fff; cursor: pointer; }
+    .sidebar button:hover { background: #357AE8; }
+
+    .main { flex: 1; }
+    .auth-bar { text-align: center; margin: 20px; }
+    .auth-bar button { padding: 8px 12px; border: none; border-radius: 6px; background: #4285F4; color: #fff; cursor: pointer; }
+    .auth-bar button:hover { background: #357AE8; }
+
+    .chat-container { max-width: 600px; margin: 20px auto; background: #fff; border-radius: 10px; padding: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
     #messages { height: 400px; overflow-y: auto; border-bottom: 1px solid #ccc; padding: 10px; }
     .message { margin: 10px 0; padding: 8px; border-radius: 6px; background: #f1f1f1; }
     .message img, .message video { max-width: 100%; border-radius: 6px; }
@@ -14,24 +26,28 @@
     .chat-input input[type="text"] { flex: 1; padding: 8px; border-radius: 6px; border: 1px solid #ccc; }
     .chat-input button { padding: 8px 12px; border: none; border-radius: 6px; background: #333; color: #fff; cursor: pointer; }
     .chat-input button:hover { background: #555; }
-    .auth-bar { text-align: center; margin: 20px; }
-    .auth-bar button { padding: 8px 12px; border: none; border-radius: 6px; background: #4285F4; color: #fff; cursor: pointer; }
-    .auth-bar button:hover { background: #357AE8; }
   </style>
 </head>
 <body>
-  <div class="auth-bar">
-    <button id="loginBtn">Sign in with Google</button>
-    <button id="logoutBtn" style="display:none;">Logout</button>
-    <p id="userInfo"></p>
+  <div class="sidebar">
+    <h3>Users</h3>
+    <ul id="userList"></ul>
   </div>
 
-  <div class="chat-container">
-    <div id="messages"></div>
-    <div class="chat-input">
-      <input type="text" id="messageText" placeholder="Type a message...">
-      <input type="file" id="fileInput" accept="image/*,video/*">
-      <button id="sendBtn">Send</button>
+  <div class="main">
+    <div class="auth-bar">
+      <button id="loginBtn">Sign in with Google</button>
+      <button id="logoutBtn" style="display:none;">Logout</button>
+      <p id="userInfo"></p>
+    </div>
+
+    <div class="chat-container">
+      <div id="messages"></div>
+      <div class="chat-input">
+        <input type="text" id="messageText" placeholder="Type a message...">
+        <input type="file" id="fileInput" accept="image/*,video/*">
+        <button id="sendBtn">Send</button>
+      </div>
     </div>
   </div>
 
@@ -39,7 +55,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, serverTimestamp, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
     // 🔹 Your Firebase project config
@@ -63,8 +79,10 @@
     const loginBtn = document.getElementById("loginBtn");
     const logoutBtn = document.getElementById("logoutBtn");
     const userInfo = document.getElementById("userInfo");
+    const userList = document.getElementById("userList");
 
     let currentUser = null;
+    let selectedFriendId = null;
 
     // Google Sign-In
     const provider = new GoogleAuthProvider();
@@ -80,50 +98,96 @@
       await signOut(auth);
     });
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
         currentUser = user;
         loginBtn.style.display = "none";
         logoutBtn.style.display = "inline-block";
         userInfo.textContent = "Logged in as: " + (user.displayName || user.email);
+
+        // Save user profile
+        await setDoc(doc(db, "users", user.uid), {
+          displayName: user.displayName || user.email,
+          email: user.email,
+          photoURL: user.photoURL || ""
+        }, { merge: true });
+
+        loadUsers();
+        loadMessages();
       } else {
         currentUser = null;
         loginBtn.style.display = "inline-block";
         logoutBtn.style.display = "none";
         userInfo.textContent = "";
+        userList.innerHTML = "";
+        document.getElementById("messages").innerHTML = "";
       }
     });
 
-    // Chat functionality
-    const messagesDiv = document.getElementById("messages");
+    // Load all users
+    function loadUsers() {
+      onSnapshot(collection(db, "users"), (snapshot) => {
+        userList.innerHTML = "";
+        snapshot.forEach((docSnap) => {
+          const u = docSnap.data();
+          if (docSnap.id !== currentUser.uid) {
+            const li = document.createElement("li");
+            li.textContent = u.displayName;
+            const btn = document.createElement("button");
+            btn.textContent = "Chat";
+            btn.onclick = () => {
+              selectedFriendId = docSnap.id;
+              loadMessages();
+            };
+            li.appendChild(btn);
+            userList.appendChild(li);
+          }
+        });
+      });
+    }
+
+    // Load messages with selected friend
+    function loadMessages() {
+      if (!currentUser || !selectedFriendId) return;
+      const messagesRef = collection(db, "messages");
+      const q = query(messagesRef,
+        where("participants", "array-contains", currentUser.uid),
+        orderBy("timestamp")
+      );
+
+      onSnapshot(q, (snapshot) => {
+        const messagesDiv = document.getElementById("messages");
+        messagesDiv.innerHTML = "";
+        snapshot.forEach((docSnap) => {
+          const msg = docSnap.data();
+          // Only show messages with this friend
+          if (msg.participants.includes(selectedFriendId)) {
+            let content = msg.text || "";
+            if (msg.fileUrl) {
+              if (msg.fileType.startsWith("image")) {
+                content += `<br><img src="${msg.fileUrl}">`;
+              } else if (msg.fileType.startsWith("video")) {
+                content += `<br><video controls src="${msg.fileUrl}"></video>`;
+              }
+            }
+            addMessage(msg.sender, content);
+          }
+        });
+      });
+    }
+
+    // Send message
     const sendBtn = document.getElementById("sendBtn");
     const messageText = document.getElementById("messageText");
     const fileInput = document.getElementById("fileInput");
 
-    const messagesRef = collection(db, "messages");
-    const q = query(messagesRef, orderBy("timestamp"));
-
-    // Listen for new messages
-    onSnapshot(q, (snapshot) => {
-      messagesDiv.innerHTML = "";
-      snapshot.forEach((doc) => {
-        const msg = doc.data();
-        let content = msg.text || "";
-        if (msg.fileUrl) {
-          if (msg.fileType.startsWith("image")) {
-            content += `<br><img src="${msg.fileUrl}">`;
-          } else if (msg.fileType.startsWith("video")) {
-            content += `<br><video controls src="${msg.fileUrl}"></video>`;
-          }
-        }
-        addMessage(msg.sender, content);
-      });
-    });
-
-    // Send message
     sendBtn.addEventListener("click", async () => {
       if (!currentUser) {
         alert("Please sign in first!");
+        return;
+      }
+      if (!selectedFriendId) {
+        alert("Select a user to chat with!");
         return;
       }
 
@@ -133,43 +197,4 @@
       let fileType = null;
 
       if (file) {
-        const storageRef = ref(storage, "uploads/" + Date.now() + "_" + file.name);
-        await uploadBytes(storageRef, file);
-        fileUrl = await getDownloadURL(storageRef);
-        fileType = file.type;
-      }
-
-      if (text || fileUrl) {
-        await addDoc(messagesRef, {
-          sender: currentUser.displayName || currentUser.email,
-          text: text,
-          fileUrl: fileUrl,
-          fileType: fileType,
-          timestamp: serverTimestamp()
-        });
-        messageText.value = "";
-        fileInput.value = "";
-      }
-    });
-
-    function addMessage(sender, content) {
-      const div = document.createElement("div");
-      div.classList.add("message");
-      div.innerHTML = `<strong>${sender}:</strong> ${content}`;
-      messagesDiv.appendChild(div);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }
-  </script>
-
-  <!-- 🔹 Firestore Security Rules (set these in Firebase Console → Firestore → Rules tab)
-  rules_version = '2';
-  service cloud.firestore {
-    match /databases/{database}/documents {
-      match /messages/{docId} {
-        allow read, write: if request.auth != null;
-      }
-    }
-  }
-  -->
-</body>
-</html>
+        const storageRef = ref(storage, "uploads/" + Date.now()
