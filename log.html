@@ -84,23 +84,6 @@
       }
     });
 
-
-        // Hide login form if already signed in
-        document.getElementById("loginForm").style.display = "none";
-
-        // Show dashboard
-        document.getElementById("displayEmail").textContent = user.email;
-        document.getElementById("dashboard").style.display = "block";
-
-        // Optional: redirect straight to home page
-        window.location.href = "untold.html";
-      } else {
-        console.log("No user signed in");
-        // Show login form if no session
-        document.getElementById("loginForm").style.display = "block";
-        document.getElementById("dashboard").style.display = "none";
-      }
-    });
   </script>
 </body>
 </html>
