@@ -211,9 +211,13 @@
         if (user.photoURL) {
           profilePic.src = user.photoURL;
         } else {
-          const docSnap = await getDoc(doc(db, "users", user.uid));
-          if (docSnap.exists() && docSnap.data().photoURL) {
-            profilePic.src = docSnap.data().photoURL;
+          try {
+            const docSnap = await getDoc(doc(db, "users", user.uid));
+            if (docSnap.exists() && docSnap.data().photoURL) {
+              profilePic.src = docSnap.data().photoURL;
+            }
+          } catch (err) {
+            console.error("Error loading profile picture:", err);
           }
         }
       } else {
@@ -221,20 +225,33 @@
       }
     });
 
-    // Upload new profile picture
+    // Upload new profile picture with error handling
     uploadInput.addEventListener("change", async (event) => {
       const file = event.target.files[0];
       const user = auth.currentUser;
-      if (!file || !user) return;
+      if (!file) {
+        alert("No file selected.");
+        return;
+      }
+      if (!user) {
+        alert("You must be logged in to upload a profile picture.");
+        return;
+      }
 
-      const storageRef = ref(storage, `profilePics/${user.uid}`);
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
+      try {
+        const storageRef = ref(storage, `profilePics/${user.uid}`);
+        await uploadBytes(storageRef, file);
+        const url = await getDownloadURL(storageRef);
 
-      await updateProfile(user, { photoURL: url });
-      await setDoc(doc(db, "users", user.uid), { photoURL: url }, { merge: true });
+        await updateProfile(user, { photoURL: url });
+        await setDoc(doc(db, "users", user.uid), { photoURL: url }, { merge: true });
 
-      profilePic.src = url;
+        profilePic.src = url;
+        console.log("Profile picture updated successfully:", url);
+      } catch (err) {
+        console.error("Upload error:", err);
+        alert("Upload failed: " + err.message);
+      }
     });
 
     // Navigation arrows
@@ -253,4 +270,3 @@
   </script>
 </body>
 </html>
-
