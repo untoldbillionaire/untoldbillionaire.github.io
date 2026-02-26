@@ -9,7 +9,8 @@
     .sidebar { width: 220px; background: #fff; padding: 10px; border-right: 1px solid #ccc; }
     .sidebar h3 { margin-top: 0; }
     .sidebar ul { list-style: none; padding: 0; }
-    .sidebar li { margin: 5px 0; display: flex; justify-content: space-between; align-items: center; }
+    .sidebar li { margin: 5px 0; display: flex; align-items: center; justify-content: space-between; }
+    .sidebar img { width: 30px; height: 30px; border-radius: 50%; margin-right: 8px; }
     .sidebar button { padding: 4px 8px; border: none; border-radius: 4px; background: #4285F4; color: #fff; cursor: pointer; }
     .sidebar button:hover { background: #357AE8; }
 
@@ -17,6 +18,7 @@
     .auth-bar { text-align: center; margin: 20px; }
     .auth-bar button { padding: 8px 12px; border: none; border-radius: 6px; background: #4285F4; color: #fff; cursor: pointer; }
     .auth-bar button:hover { background: #357AE8; }
+    .auth-bar img { width: 60px; height: 60px; border-radius: 50%; margin-top: 10px; border: 2px solid #333; }
 
     .chat-container { max-width: 600px; margin: 20px auto; background: #fff; border-radius: 10px; padding: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
     #messages { height: 400px; overflow-y: auto; border-bottom: 1px solid #ccc; padding: 10px; }
@@ -39,6 +41,8 @@
       <button id="loginBtn">Sign in with Google</button>
       <button id="logoutBtn" style="display:none;">Logout</button>
       <p id="userInfo"></p>
+      <img id="profilePic" src="default-avatar.png" alt="Profile Picture">
+      <input type="file" id="profileUpload" accept="image/*" style="display:none;">
     </div>
 
     <div class="chat-container">
@@ -58,7 +62,7 @@
     import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, serverTimestamp, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-    // 🔹 Your Firebase project config
+    // 🔹 Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyDWRSdDveag6AQIaCP4SR5X5caMyMiiktk",
       authDomain: "collection-abae0.firebaseapp.com",
@@ -75,11 +79,13 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
-    // Auth elements
+    // Elements
     const loginBtn = document.getElementById("loginBtn");
     const logoutBtn = document.getElementById("logoutBtn");
     const userInfo = document.getElementById("userInfo");
     const userList = document.getElementById("userList");
+    const profilePic = document.getElementById("profilePic");
+    const profileUpload = document.getElementById("profileUpload");
 
     let currentUser = null;
     let selectedFriendId = null;
@@ -112,6 +118,8 @@
           photoURL: user.photoURL || ""
         }, { merge: true });
 
+        profilePic.src = user.photoURL || "default-avatar.png";
+
         loadUsers();
         loadMessages();
       } else {
@@ -121,6 +129,24 @@
         userInfo.textContent = "";
         userList.innerHTML = "";
         document.getElementById("messages").innerHTML = "";
+        profilePic.src = "default-avatar.png";
+      }
+    });
+
+    // Profile picture upload
+    profilePic.addEventListener("click", () => {
+      if (currentUser) profileUpload.click();
+    });
+
+    profileUpload.addEventListener("change", async (event) => {
+      const file = event.target.files[0];
+      if (file && currentUser) {
+        const storageRef = ref(storage, "profilePics/" + currentUser.uid);
+        await uploadBytes(storageRef, file);
+        const url = await getDownloadURL(storageRef);
+
+        await setDoc(doc(db, "users", currentUser.uid), { photoURL: url }, { merge: true });
+        profilePic.src = url;
       }
     });
 
@@ -132,7 +158,7 @@
           const u = docSnap.data();
           if (docSnap.id !== currentUser.uid) {
             const li = document.createElement("li");
-            li.textContent = u.displayName;
+            li.innerHTML = `<img src="${u.photoURL || 'default-avatar.png'}"> ${u.displayName}`;
             const btn = document.createElement("button");
             btn.textContent = "Chat";
             btn.onclick = () => {
@@ -152,49 +178,6 @@
       const messagesRef = collection(db, "messages");
       const q = query(messagesRef,
         where("participants", "array-contains", currentUser.uid),
-        orderBy("timestamp")
-      );
-
-      onSnapshot(q, (snapshot) => {
-        const messagesDiv = document.getElementById("messages");
-        messagesDiv.innerHTML = "";
-        snapshot.forEach((docSnap) => {
-          const msg = docSnap.data();
-          // Only show messages with this friend
-          if (msg.participants.includes(selectedFriendId)) {
-            let content = msg.text || "";
-            if (msg.fileUrl) {
-              if (msg.fileType.startsWith("image")) {
-                content += `<br><img src="${msg.fileUrl}">`;
-              } else if (msg.fileType.startsWith("video")) {
-                content += `<br><video controls src="${msg.fileUrl}"></video>`;
-              }
-            }
-            addMessage(msg.sender, content);
-          }
-        });
-      });
-    }
-
-    // Send message
-    const sendBtn = document.getElementById("sendBtn");
-    const messageText = document.getElementById("messageText");
-    const fileInput = document.getElementById("fileInput");
-
-    sendBtn.addEventListener("click", async () => {
-      if (!currentUser) {
-        alert("Please sign in first!");
-        return;
-      }
-      if (!selectedFriendId) {
-        alert("Select a user to chat with!");
-        return;
-      }
-
-      const text = messageText.value.trim();
-      const file = fileInput.files[0];
-      let fileUrl = null;
-      let fileType = null;
-
-      if (file) {
-        const storageRef = ref(storage, "uploads/" + Date.now()
+                      </script>
+</body>
+</html>
