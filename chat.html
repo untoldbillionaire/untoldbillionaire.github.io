@@ -5,196 +5,18 @@
   <title>untoldbillionaire.com - Chat</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      background-color: powderblue;
-      font-family: Georgia, serif;
-      margin: 0;
-      padding: 0;
-    }
-    .search-bar {
-      width: 250px;
-      border: 2px solid black;
-      border-radius: 25px;
-      background-color: #FFFFFF;
-      opacity: 0.9;
-      padding: 5px;
-    }
-
-    .search-btn {
-      border: 1px solid black;
-      border-radius: 20px;
-      cursor: pointer;
-      padding: 5px 10px;
-      margin-left: 5px;
-    }
-    .header-bar {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      right: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 9999;
-      padding: 0 10px;
-    }
-
-    .left-section {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .nav-arrows {
-      display: flex;
-      gap: 10px;
-    }
-
-    .nav-arrows button {
-      background: #333;
-      color: white;
-      border: none;
-      padding: 6px 10px;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 4px;
-      opacity: 0.85;
-    }
-
-    .nav-arrows button:hover {
-      opacity: 1;
-    }
-
-    .profile-upload {
-      position: relative;
-      width: 70px;
-      height: 70px;
-    }
-
-    .profile-upload img {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #333;
-    }
-
-    .profile-upload input {
-      display: none;
-    }
-
-    .upload-label {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      background: #333;
-      color: white;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: bold;
-      line-height: 1;
-    }
-
-    @media (max-width: 600px) {
-      .header-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-      }
-      .search-container {
-        width: 100%;
-        display: flex;
-        justify-content: flex-start;
-      }
-      .search-bar {
-        width: 100%;
-      }
-    }
-
-    /* Chat styles */
-    .chat-container {
-      max-width: 600px;
-      margin: 120px auto 20px auto; /* spacing below fixed header */
-      background: #fff;
-      border-radius: 10px;
-      padding: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    #messages {
-      height: 400px;
-      overflow-y: auto;
-      border-bottom: 1px solid #ccc;
-      padding: 10px;
-    }
-
-    .message {
-      margin: 10px 0;
-      padding: 8px;
-      border-radius: 6px;
-      background: #f1f1f1;
-    }
-
-    .message img, .message video {
-      max-width: 100%;
-      border-radius: 6px;
-    }
-
-    .chat-input {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .chat-input input[type="text"] {
-      flex: 1;
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    .chat-input button {
-      padding: 8px 12px;
-      border: none;
-      border-radius: 6px;
-      background: #333;
-      color: #fff;
-      cursor: pointer;
-    }
-
-    .chat-input button:hover {
-      background: #555;
-    }
+    body { background-color: powderblue; font-family: Georgia, serif; margin: 0; padding: 0; }
+    .chat-container { max-width: 600px; margin: 120px auto 20px auto; background: #fff; border-radius: 10px; padding: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    #messages { height: 400px; overflow-y: auto; border-bottom: 1px solid #ccc; padding: 10px; }
+    .message { margin: 10px 0; padding: 8px; border-radius: 6px; background: #f1f1f1; }
+    .message img, .message video { max-width: 100%; border-radius: 6px; }
+    .chat-input { display: flex; gap: 10px; margin-top: 10px; }
+    .chat-input input[type="text"] { flex: 1; padding: 8px; border-radius: 6px; border: 1px solid #ccc; }
+    .chat-input button { padding: 8px 12px; border: none; border-radius: 6px; background: #333; color: #fff; cursor: pointer; }
+    .chat-input button:hover { background: #555; }
   </style>
 </head>
 <body>
-  <div class="header-bar">
-    <div class="left-section">
-      <div class="profile-upload">
-        <img id="profilePic" src="default-avatar.png" alt="Profile">
-        <input type="file" id="uploadInput" accept="image/*">
-        <label for="uploadInput" class="upload-label">+</label>
-      </div>
-      <div class="nav-arrows">
-        <button id="backBtn">←</button>
-        <button id="forwardBtn">→</button>
-      </div>
-    </div>
-    <div class="search-container">
-      <input class="search-bar" type="search" placeholder="Search...">
-      <button class="search-btn">Search</button>
-    </div>
-  </div>
-
-  
-
-  <!-- Chat interface -->
   <div class="chat-container">
     <div id="messages"></div>
     <div class="chat-input">
@@ -204,64 +26,80 @@
     </div>
   </div>
 
-  <script>
-    // Navigation arrows
-    document.getElementById("backBtn").addEventListener("click", () => {
-      window.history.back();
-    });
-    document.getElementById("forwardBtn").addEventListener("click", () => {
-      window.history.forward();
-    });
+  <!-- Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-    // Profile picture upload
-    const uploadInput = document.getElementById("uploadInput");
-    const profilePic = document.getElementById("profilePic");
-    const savedPic = localStorage.getItem("profilePic");
-    if (savedPic) profilePic.src = savedPic;
+    // 🔹 Replace with your Firebase project config
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
 
-    uploadInput.addEventListener("change", (event) => {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          profilePic.src = e.target.result;
-          localStorage.setItem("profilePic", e.target.result);
-        };
-        reader.readAsDataURL(file);
-      }
-    });
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
 
-    // Search button
-    document.querySelector(".search-btn").addEventListener("click", () => {
-      const query = document.querySelector(".search-bar").value;
-      alert("Searching for: " + query);
-    });
+    // Sign in anonymously
+    signInAnonymously(auth);
 
-    // Chat functionality
-    const messages = document.getElementById("messages");
+    const messagesDiv = document.getElementById("messages");
     const sendBtn = document.getElementById("sendBtn");
     const messageText = document.getElementById("messageText");
     const fileInput = document.getElementById("fileInput");
 
-    sendBtn.addEventListener("click", () => {
+    const messagesRef = collection(db, "messages");
+    const q = query(messagesRef, orderBy("timestamp"));
+
+    // 🔹 Listen for new messages in real time
+    onSnapshot(q, (snapshot) => {
+      messagesDiv.innerHTML = "";
+      snapshot.forEach((doc) => {
+        const msg = doc.data();
+        let content = msg.text || "";
+        if (msg.fileUrl) {
+          if (msg.fileType.startsWith("image")) {
+            content += `<br><img src="${msg.fileUrl}">`;
+          } else if (msg.fileType.startsWith("video")) {
+            content += `<br><video controls src="${msg.fileUrl}"></video>`;
+          }
+        }
+        addMessage(msg.sender, content);
+      });
+    });
+
+    // 🔹 Send message
+    sendBtn.addEventListener("click", async () => {
       const text = messageText.value.trim();
       const file = fileInput.files[0];
-
-      if (text) {
-        addMessage("You", text);
-        messageText.value = "";
-      }
+      let fileUrl = null;
+      let fileType = null;
 
       if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          if (file.type.startsWith("image")) {
-            addMessage("You", `<img src="${e.target.result}">`);
-          } else if (file.type.startsWith("video")) {
-            addMessage("You", `<video controls src="${e.target.result}"></video>`);
-          }
-        };
-        reader.readAsDataURL(file);
+        const storageRef = ref(storage, "uploads/" + file.name);
+        await uploadBytes(storageRef, file);
+        fileUrl = await getDownloadURL(storageRef);
+        fileType = file.type;
+      }
+
+      if (text || fileUrl) {
+        await addDoc(messagesRef, {
+          sender: "Anonymous", // replace with auth user info if needed
+          text: text,
+          fileUrl: fileUrl,
+          fileType: fileType,
+          timestamp: serverTimestamp()
+        });
+        messageText.value = "";
         fileInput.value = "";
       }
     });
@@ -269,5 +107,10 @@
     function addMessage(sender, content) {
       const div = document.createElement("div");
       div.classList.add("message");
-      div
-        </script>
+      div.innerHTML = `<strong>${sender}:</strong> ${content}`;
+      messagesDiv.appendChild(div);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+  </script>
+</body>
+</html>
