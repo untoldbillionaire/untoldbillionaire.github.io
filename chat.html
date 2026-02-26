@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body { background-color: powderblue; font-family: Georgia, serif; margin: 0; padding: 0; display: flex; }
-    .sidebar { width: 220px; background: #fff; padding: 10px; border-right: 1px solid #ccc; }
+    .sidebar { width: 250px; background: #fff; padding: 10px; border-right: 1px solid #ccc; }
     .sidebar h3 { margin-top: 0; }
     .sidebar ul { list-style: none; padding: 0; }
     .sidebar li { margin: 5px 0; display: flex; align-items: center; justify-content: space-between; }
@@ -32,9 +32,9 @@
 </head>
 <body>
   <div class="sidebar">
-    <h3>Users</h3>
+    <h3>All Users</h3>
     <ul id="userList"></ul>
-    <h3>Friends</h3>
+    <h3>Your Friends</h3>
     <ul id="friendList"></ul>
   </div>
 
@@ -66,13 +66,12 @@
 
     // 🔹 Firebase config
     const firebaseConfig = {
-      apiKey: "AIzaSyDWRSdDveag6AQIaCP4SR5X5caMyMiiktk",
-      authDomain: "collection-abae0.firebaseapp.com",
-      projectId: "collection-abae0",
-      storageBucket: "collection-abae0.appspot.com",
-      messagingSenderId: "721235736494",
-      appId: "1:721235736494:web:8e81c5cf9cb633383cfa3f",
-      measurementId: "G-ZCR2D4F94L"
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
     };
 
     // Initialize Firebase
@@ -168,9 +167,18 @@
             const li = document.createElement("li");
             li.innerHTML = `<img src="${u.photoURL || 'default-avatar.png'}"> ${u.displayName}`;
             
-            const chatBtn = document.create;
-          }
-        });
-              </script>
+            const chatBtn = document.createElement("button");
+            chatBtn.textContent = "Chat";
+            chatBtn.onclick = () => {
+              selectedFriendId = docSnap.id;
+              loadMessages();
+            };
+
+            const addBtn = document.createElement("button");
+            addBtn.textContent = "Add Friend";
+            addBtn.onclick = () => addFriend(currentUser.uid, docSnap.id);
+addBtn.textContent = "Add Friend"; 
+}});
+</script>
 </body>
 </html>
