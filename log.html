@@ -36,13 +36,13 @@
       <input type="password" id="loginPassword" required><br><br>
       <input type="submit" value="Sign In">
       <br><br>
-      <a href="#">Forgot password</a>
+      <a href="#" id="forgotPassword">Forgot password?</a>
     </form>
   </center>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } 
+    import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } 
       from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -68,9 +68,6 @@
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        document.getElementById("displayEmail").textContent = user.email;
-        document.getElementById("dashboard").style.display = "block";
-
         // Redirect after login
         window.location.href = "untold.html";
       } catch (error) {
@@ -78,6 +75,23 @@
       }
     });
 
+    // ✅ Forgot Password
+    document.getElementById("forgotPassword").addEventListener("click", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+
+      if (!email) {
+        alert("Please enter your email address first.");
+        return;
+      }
+
+      try {
+        await sendPasswordResetEmail(auth, email);
+        alert("Password reset email sent! Check your inbox.");
+      } catch (error) {
+        alert("Error: " + error.message);
+      }
+    });
   </script>
 </body>
 </html>
