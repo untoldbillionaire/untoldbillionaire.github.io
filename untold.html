@@ -11,93 +11,11 @@
       margin: 0;
       padding: 0;
     }
-
-    ul {
-      margin: 0;
-      padding: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      background-color: #fff;
-    }
-
-    li {
-      list-style-type: none;
-      margin: 5px;
-    }
-
-    a.home-btn {
-      text-decoration: none;
-      padding: 8px 12px;
-      background-color: #eee;
-      border-radius: 5px;
-      color: black;
-    }
-
-    a.home-btn:hover {
-      background-color: #ddd;
-    }
-
-    .search-bar {
-      width: 250px;
-      border: 2px solid black;
-      border-radius: 25px;
-      background-color: #FFFFFF;
-      opacity: 0.9;
-      padding: 5px;
-    }
-
-    .search-btn {
-      border: 1px solid black;
-      border-radius: 20px;
-      cursor: pointer;
-      padding: 5px 10px;
-      margin-left: 5px;
-    }
-
-    .header-bar {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      right: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 9999;
-      padding: 0 10px;
-    }
-
-    .left-section {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .nav-arrows {
-      display: flex;
-      gap: 10px;
-    }
-
-    .nav-arrows button {
-      background: #333;
-      color: white;
-      border: none;
-      padding: 6px 10px;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 4px;
-      opacity: 0.85;
-    }
-
-    .nav-arrows button:hover {
-      opacity: 1;
-    }
-
     .profile-upload {
       position: relative;
       width: 70px;
       height: 70px;
     }
-
     .profile-upload img {
       width: 70px;
       height: 70px;
@@ -105,11 +23,7 @@
       object-fit: cover;
       border: 2px solid #333;
     }
-
-    .profile-upload input {
-      display: none;
-    }
-
+    .profile-upload input { display: none; }
     .upload-label {
       position: absolute;
       bottom: 0;
@@ -127,55 +41,14 @@
       font-weight: bold;
       line-height: 1;
     }
-
-    @media (max-width: 600px) {
-      .header-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-      }
-      .search-container {
-        width: 100%;
-        display: flex;
-        justify-content: flex-start;
-      }
-      .search-bar {
-        width: 100%;
-      }
-    }
   </style>
 </head>
 <body>
-  <div class="header-bar">
-    <div class="left-section">
-      <div class="profile-upload">
-        <img id="profilePic" src="default-avatar.png" alt="Profile">
-        <input type="file" id="uploadInput" accept="image/*">
-        <label for="uploadInput" class="upload-label">+</label>
-      </div>
-      <div class="nav-arrows">
-        <button id="backBtn">←</button>
-        <button id="forwardBtn">→</button>
-      </div>
-    </div>
-    <div class="search-container">
-      <input class="search-bar" type="search" placeholder="Search...">
-      <button class="search-btn">Search</button>
-    </div>
+  <div class="profile-upload">
+    <img id="profilePic" src="default-avatar.png" alt="Profile">
+    <input type="file" id="uploadInput" accept="image/*">
+    <label for="uploadInput" class="upload-label">+</label>
   </div>
-
-  <br><br><br><br><br><br><br>
-
-  <ul>
-    <li><a class="home-btn" href="doc1">Home</a></li>
-    <li><a class="home-btn" href="chat.html">Chat</a></li>
-    <li><a class="home-btn" href="doc1">Explore</a></li>
-    <li><a class="home-btn" href="doc1">Find</a></li>
-    <li><a class="home-btn" href="doc1">Create</a></li>
-    <li><a class="home-btn" href="doc1">Read</a></li>
-    <li><a class="home-btn" href="help.html">Help</a></li>
-  </ul>
-  <hr>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
@@ -186,7 +59,6 @@
     import { getFirestore, doc, setDoc, getDoc } 
       from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-    // ✅ Your Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyDWRSdDveag6AQIaCP4SR5X5caMyMiiktk",
       authDomain: "collection-abae0.firebaseapp.com",
@@ -225,16 +97,24 @@
       }
     });
 
-    // Upload new profile picture with error handling
+    // Upload new profile picture with preview + error handling
     uploadInput.addEventListener("change", async (event) => {
       const file = event.target.files[0];
-      const user = auth.currentUser;
       if (!file) {
         alert("No file selected.");
         return;
       }
+
+      // Show preview immediately
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        profilePic.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+
+      const user = auth.currentUser;
       if (!user) {
-        alert("You must be logged in to upload a profile picture.");
+        console.warn("Not logged in: preview shown, but not uploaded to Firebase.");
         return;
       }
 
@@ -252,20 +132,6 @@
         console.error("Upload error:", err);
         alert("Upload failed: " + err.message);
       }
-    });
-
-    // Navigation arrows
-    document.getElementById("backBtn").addEventListener("click", () => {
-      window.history.back();
-    });
-    document.getElementById("forwardBtn").addEventListener("click", () => {
-      window.history.forward();
-    });
-
-    // Search button
-    document.querySelector(".search-btn").addEventListener("click", () => {
-      const query = document.querySelector(".search-bar").value;
-      alert("Searching for: " + query);
     });
   </script>
 </body>
