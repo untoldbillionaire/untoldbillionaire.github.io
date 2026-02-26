@@ -186,7 +186,6 @@
     import { getFirestore, doc, setDoc, getDoc } 
       from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-    // ✅ Your Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyDWRSdDveag6AQIaCP4SR5X5caMyMiiktk",
       authDomain: "collection-abae0.firebaseapp.com",
@@ -205,7 +204,7 @@
     const uploadInput = document.getElementById("uploadInput");
     const profilePic = document.getElementById("profilePic");
 
-    // Load profile picture when user logs in
+    // 🔹 Load profile picture when user logs in or from localStorage
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         if (user.photoURL) {
@@ -221,11 +220,12 @@
           }
         }
       } else {
-        profilePic.src = "default-avatar.png";
+        const savedPic = localStorage.getItem("profilePic");
+        profilePic.src = savedPic || "default-avatar.png";
       }
     });
 
-    // Upload new profile picture with preview + error handling
+    // 🔹 Upload new profile picture with preview + persistence
     uploadInput.addEventListener("change", async (event) => {
       const file = event.target.files[0];
       if (!file) {
@@ -233,16 +233,17 @@
         return;
       }
 
-      // Show preview immediately
+      // Show preview immediately and save locally
       const reader = new FileReader();
       reader.onload = (e) => {
         profilePic.src = e.target.result;
+        localStorage.setItem("profilePic", e.target.result);
       };
       reader.readAsDataURL(file);
 
       const user = auth.currentUser;
       if (!user) {
-        console.warn("Not logged in: preview shown, but not uploaded to Firebase.");
+        console.warn("Not logged in: preview saved locally, not uploaded to Firebase.");
         return;
       }
 
@@ -255,6 +256,7 @@
         await setDoc(doc(db, "users", user.uid), { photoURL: url }, { merge: true });
 
         profilePic.src = url;
+        localStorage.setItem("profilePic", url); // persist URL too
         console.log("Profile picture updated successfully:", url);
       } catch (err) {
         console.error("Upload error:", err);
