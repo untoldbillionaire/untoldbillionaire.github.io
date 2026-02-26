@@ -14,9 +14,18 @@
     .chat-input input[type="text"] { flex: 1; padding: 8px; border-radius: 6px; border: 1px solid #ccc; }
     .chat-input button { padding: 8px 12px; border: none; border-radius: 6px; background: #333; color: #fff; cursor: pointer; }
     .chat-input button:hover { background: #555; }
+    .auth-bar { text-align: center; margin: 20px; }
+    .auth-bar button { padding: 8px 12px; border: none; border-radius: 6px; background: #4285F4; color: #fff; cursor: pointer; }
+    .auth-bar button:hover { background: #357AE8; }
   </style>
 </head>
 <body>
+  <div class="auth-bar">
+    <button id="loginBtn">Sign in with Google</button>
+    <button id="logoutBtn" style="display:none;">Logout</button>
+    <p id="userInfo"></p>
+  </div>
+
   <div class="chat-container">
     <div id="messages"></div>
     <div class="chat-input">
@@ -29,16 +38,16 @@
   <!-- Firebase SDKs -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-    // 🔹 Replace with your Firebase project config
-   const firebaseConfig = {
+    // 🔹 Your Firebase project config
+    const firebaseConfig = {
       apiKey: "AIzaSyDWRSdDveag6AQIaCP4SR5X5caMyMiiktk",
       authDomain: "collection-abae0.firebaseapp.com",
       projectId: "collection-abae0",
-      storageBucket: "collection-abae0.appspot.com",  // corrected format
+      storageBucket: "collection-abae0.appspot.com",
       messagingSenderId: "721235736494",
       appId: "1:721235736494:web:8e81c5cf9cb633383cfa3f",
       measurementId: "G-ZCR2D4F94L"
@@ -50,9 +59,42 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
-    // Sign in anonymously
-    signInAnonymously(auth);
+    // Auth elements
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const userInfo = document.getElementById("userInfo");
 
+    let currentUser = null;
+
+    // Google Sign-In
+    const provider = new GoogleAuthProvider();
+    loginBtn.addEventListener("click", async () => {
+      try {
+        await signInWithPopup(auth, provider);
+      } catch (error) {
+        alert("Login failed: " + error.message);
+      }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+    });
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUser = user;
+        loginBtn.style.display = "none";
+        logoutBtn.style.display = "inline-block";
+        userInfo.textContent = "Logged in as: " + (user.displayName || user.email);
+      } else {
+        currentUser = null;
+        loginBtn.style.display = "inline-block";
+        logoutBtn.style.display = "none";
+        userInfo.textContent = "";
+      }
+    });
+
+    // Chat functionality
     const messagesDiv = document.getElementById("messages");
     const sendBtn = document.getElementById("sendBtn");
     const messageText = document.getElementById("messageText");
@@ -61,7 +103,7 @@
     const messagesRef = collection(db, "messages");
     const q = query(messagesRef, orderBy("timestamp"));
 
-    // 🔹 Listen for new messages in real time
+    // Listen for new messages
     onSnapshot(q, (snapshot) => {
       messagesDiv.innerHTML = "";
       snapshot.forEach((doc) => {
@@ -78,15 +120,20 @@
       });
     });
 
-    // 🔹 Send message
+    // Send message
     sendBtn.addEventListener("click", async () => {
+      if (!currentUser) {
+        alert("Please sign in first!");
+        return;
+      }
+
       const text = messageText.value.trim();
       const file = fileInput.files[0];
       let fileUrl = null;
       let fileType = null;
 
       if (file) {
-        const storageRef = ref(storage, "uploads/" + file.name);
+        const storageRef = ref(storage, "uploads/" + Date.now() + "_" + file.name);
         await uploadBytes(storageRef, file);
         fileUrl = await getDownloadURL(storageRef);
         fileType = file.type;
@@ -94,7 +141,7 @@
 
       if (text || fileUrl) {
         await addDoc(messagesRef, {
-          sender: "Anonymous", // replace with auth user info if needed
+          sender: currentUser.displayName || currentUser.email,
           text: text,
           fileUrl: fileUrl,
           fileType: fileType,
