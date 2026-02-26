@@ -84,10 +84,6 @@
       }
     });
 
-    // ✅ Auto-login using Firebase session tokens
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        console.log("User is signed in:", user.email);
 
         // Hide login form if already signed in
         document.getElementById("loginForm").style.display = "none";
