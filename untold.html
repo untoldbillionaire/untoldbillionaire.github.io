@@ -128,7 +128,7 @@
       line-height: 1;
     }
 
-    /* 🔹 Mobile/portrait view */
+    /* Mobile/portrait view */
     @media (max-width: 768px) {
       .header-bar {
         flex-direction: column;
@@ -162,7 +162,7 @@
       }
     }
 
-    /* 🔹 Desktop view */
+    /* Desktop view */
     @media (min-width: 769px) {
       ul {
         flex-direction: row;
@@ -245,9 +245,12 @@
     const uploadInput = document.getElementById("uploadInput");
     const profilePic = document.getElementById("profilePic");
 
-    // Load profile picture on page load
+    // Load profile picture permanently
     onAuthStateChanged(auth, async (user) => {
       if (user) {
+        // Remove any localStorage preview
+        localStorage.removeItem("profilePic");
+
         if (user.photoURL) {
           profilePic.src = user.photoURL;
         } else {
@@ -274,11 +277,11 @@
       const file = event.target.files[0];
       if (!file) return alert("No file selected.");
 
-      // Preview immediately
+      // Local preview for logged-out users
       const reader = new FileReader();
       reader.onload = (e) => {
         profilePic.src = e.target.result;
-        localStorage.setItem("profilePic", e.target.result); // optional preview
+        localStorage.setItem("profilePic", e.target.result);
       };
       reader.readAsDataURL(file);
 
@@ -290,7 +293,6 @@
         await uploadBytes(storageRef, file);
         const url = await getDownloadURL(storageRef);
 
-        // Update Firebase Auth and Firestore
         await updateProfile(user, { photoURL: url });
         await setDoc(doc(db, "users", user.uid), { photoURL: url }, { merge: true });
 
@@ -302,15 +304,9 @@
       }
     });
 
-    // Navigation buttons
-    document.getElementById("backBtn").addEventListener("click", () => {
-      window.history.back();
-    });
-    document.getElementById("forwardBtn").addEventListener("click", () => {
-      window.history.forward();
-    });
+    document.getElementById("backBtn").addEventListener("click", () => window.history.back());
+    document.getElementById("forwardBtn").addEventListener("click", () => window.history.forward());
 
-    // Search button
     document.querySelector(".search-btn").addEventListener("click", () => {
       const query = document.querySelector(".search-bar").value;
       alert("Searching for: " + query);
