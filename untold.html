@@ -245,6 +245,7 @@
     const uploadInput = document.getElementById("uploadInput");
     const profilePic = document.getElementById("profilePic");
 
+    // Load profile picture on page load
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         if (user.photoURL) {
@@ -254,9 +255,12 @@
             const docSnap = await getDoc(doc(db, "users", user.uid));
             if (docSnap.exists() && docSnap.data().photoURL) {
               profilePic.src = docSnap.data().photoURL;
+            } else {
+              profilePic.src = "default-avatar.png";
             }
           } catch (err) {
             console.error("Error loading profile picture:", err);
+            profilePic.src = "default-avatar.png";
           }
         }
       } else {
@@ -265,36 +269,32 @@
       }
     });
 
+    // Upload new profile picture
     uploadInput.addEventListener("change", async (event) => {
       const file = event.target.files[0];
-      if (!file) {
-        alert("No file selected.");
-        return;
-      }
+      if (!file) return alert("No file selected.");
 
+      // Preview immediately
       const reader = new FileReader();
       reader.onload = (e) => {
         profilePic.src = e.target.result;
-        localStorage.setItem("profilePic", e.target.result);
+        localStorage.setItem("profilePic", e.target.result); // optional preview
       };
       reader.readAsDataURL(file);
 
       const user = auth.currentUser;
-      if (!user) {
-        console.warn("Not logged in: preview saved locally, not uploaded to Firebase.");
-        return;
-      }
+      if (!user) return console.warn("Login to save profile picture permanently.");
 
       try {
         const storageRef = ref(storage, `profilePics/${user.uid}`);
         await uploadBytes(storageRef, file);
         const url = await getDownloadURL(storageRef);
 
+        // Update Firebase Auth and Firestore
         await updateProfile(user, { photoURL: url });
         await setDoc(doc(db, "users", user.uid), { photoURL: url }, { merge: true });
 
         profilePic.src = url;
-        localStorage.setItem("profilePic", url);
         console.log("Profile picture updated successfully:", url);
       } catch (err) {
         console.error("Upload error:", err);
@@ -302,6 +302,7 @@
       }
     });
 
+    // Navigation buttons
     document.getElementById("backBtn").addEventListener("click", () => {
       window.history.back();
     });
@@ -309,6 +310,7 @@
       window.history.forward();
     });
 
+    // Search button
     document.querySelector(".search-btn").addEventListener("click", () => {
       const query = document.querySelector(".search-bar").value;
       alert("Searching for: " + query);
