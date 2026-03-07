@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>untoldbillionaire.com</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
     body {
       background-color: powderblue;
@@ -128,19 +128,60 @@
       line-height: 1;
     }
 
-    @media (max-width: 600px) {
+    /* 🔹 Mobile/portrait view */
+    @media (max-width: 768px) {
       .header-bar {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
+        padding: 10px;
       }
+
       .search-container {
         width: 100%;
         display: flex;
         justify-content: flex-start;
       }
+
       .search-bar {
         width: 100%;
+      }
+
+      ul {
+        flex-direction: column;
+        padding: 5px;
+      }
+
+      li {
+        margin: 5px 0;
+      }
+
+      .nav-arrows button {
+        padding: 10px 14px;
+        font-size: 18px;
+      }
+    }
+
+    /* 🔹 Desktop view */
+    @media (min-width: 769px) {
+      ul {
+        flex-direction: row;
+        justify-content: flex-start;
+        background-color: #fff;
+      }
+
+      li {
+        margin: 5px;
+      }
+
+      .header-bar {
+        flex-direction: row;
+        align-items: center;
+        padding: 0 20px;
+      }
+
+      .search-bar {
+        width: 250px;
       }
     }
   </style>
@@ -204,7 +245,6 @@
     const uploadInput = document.getElementById("uploadInput");
     const profilePic = document.getElementById("profilePic");
 
-    // 🔹 Load profile picture when user logs in or from localStorage
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         if (user.photoURL) {
@@ -225,7 +265,6 @@
       }
     });
 
-    // 🔹 Upload new profile picture with preview + persistence
     uploadInput.addEventListener("change", async (event) => {
       const file = event.target.files[0];
       if (!file) {
@@ -233,7 +272,6 @@
         return;
       }
 
-      // Show preview immediately and save locally
       const reader = new FileReader();
       reader.onload = (e) => {
         profilePic.src = e.target.result;
@@ -256,7 +294,7 @@
         await setDoc(doc(db, "users", user.uid), { photoURL: url }, { merge: true });
 
         profilePic.src = url;
-        localStorage.setItem("profilePic", url); // persist URL too
+        localStorage.setItem("profilePic", url);
         console.log("Profile picture updated successfully:", url);
       } catch (err) {
         console.error("Upload error:", err);
@@ -264,7 +302,6 @@
       }
     });
 
-    // Navigation arrows
     document.getElementById("backBtn").addEventListener("click", () => {
       window.history.back();
     });
@@ -272,9 +309,8 @@
       window.history.forward();
     });
 
-    // Search button
     document.querySelector(".search-btn").addEventListener("click", () => {
- const query = document.querySelector(".search-bar").value;
+      const query = document.querySelector(".search-bar").value;
       alert("Searching for: " + query);
     });
   </script>
