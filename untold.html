@@ -5,315 +5,159 @@
   <title>untoldbillionaire.com</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
-    body {
-      background-color: powderblue;
-      font-family: Georgia, serif;
-      margin: 0;
-      padding: 0;
-    }
-
-    ul {
-      margin: 0;
-      padding: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      background-color: #fff;
-    }
-
-    li {
-      list-style-type: none;
-      margin: 5px;
-    }
-
-    a.home-btn {
-      text-decoration: none;
-      padding: 8px 12px;
-      background-color: #eee;
-      border-radius: 5px;
-      color: black;
-    }
-
-    a.home-btn:hover {
-      background-color: #ddd;
-    }
-
-    .search-bar {
-      width: 250px;
-      border: 2px solid black;
-      border-radius: 25px;
-      background-color: #fff;
-      opacity: 0.9;
-      padding: 5px;
-    }
-
-    .search-btn {
-      border: 1px solid black;
-      border-radius: 20px;
-      cursor: pointer;
-      padding: 5px 10px;
-      margin-left: 5px;
-    }
-
-    .header-bar {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      right: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 9999;
-      padding: 0 10px;
-    }
-
-    .left-section {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .nav-arrows {
-      display: flex;
-      gap: 10px;
-    }
-
-    .nav-arrows button {
-      background: #333;
-      color: white;
-      border: none;
-      padding: 6px 10px;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 4px;
-      opacity: 0.85;
-    }
-
-    .nav-arrows button:hover {
-      opacity: 1;
-    }
-
-    .profile-upload {
-      position: relative;
-      width: 70px;
-      height: 70px;
-    }
-
-    .profile-upload img {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #333;
-    }
-
-    .profile-upload input {
-      display: none;
-    }
-
-    .upload-label {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      background: #333;
-      color: white;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: bold;
-      line-height: 1;
-    }
-
-    /* Mobile/portrait view */
+    body { background-color: powderblue; font-family: Georgia, serif; margin:0; padding:0; }
+    ul { margin:0; padding:10px; display:flex; flex-wrap:wrap; background-color:#fff; }
+    li { list-style-type:none; margin:5px; }
+    a.home-btn { text-decoration:none; padding:8px 12px; background-color:#eee; border-radius:5px; color:black; }
+    a.home-btn:hover { background-color:#ddd; }
+    .search-bar { width:250px; border:2px solid black; border-radius:25px; background-color:#fff; opacity:0.9; padding:5px; }
+    .search-btn { border:1px solid black; border-radius:20px; cursor:pointer; padding:5px 10px; margin-left:5px; }
+    .header-bar { position:fixed; top:10px; left:10px; right:10px; display:flex; justify-content:space-between; align-items:center; z-index:9999; padding:0 10px; }
+    .left-section { display:flex; align-items:center; gap:10px; }
+    .nav-arrows { display:flex; gap:10px; }
+    .nav-arrows button { background:#333; color:white; border:none; padding:6px 10px; font-size:16px; cursor:pointer; border-radius:4px; opacity:0.85; }
+    .nav-arrows button:hover { opacity:1; }
+    .profile-upload { position:relative; width:70px; height:70px; }
+    .profile-upload img { width:70px; height:70px; border-radius:50%; object-fit:cover; border:2px solid #333; }
+    .profile-upload input { display:none; }
+    .upload-label { position:absolute; bottom:0; right:0; background:#333; color:white; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:14px; font-weight:bold; line-height:1; }
     @media (max-width: 768px) {
-      .header-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-        padding: 10px;
-      }
-
-      .search-container {
-        width: 100%;
-        display: flex;
-        justify-content: flex-start;
-      }
-
-      .search-bar {
-        width: 100%;
-      }
-
-      ul {
-        flex-direction: column;
-        padding: 5px;
-      }
-
-      li {
-        margin: 5px 0;
-      }
-
-      .nav-arrows button {
-        padding: 10px 14px;
-        font-size: 18px;
-      }
+      .header-bar { flex-direction:column; align-items:flex-start; gap:10px; padding:10px; }
+      .search-container { width:100%; display:flex; justify-content:flex-start; }
+      .search-bar { width:100%; }
+      ul { flex-direction:column; padding:5px; }
+      li { margin:5px 0; }
+      .nav-arrows button { padding:10px 14px; font-size:18px; }
     }
-
-    /* Desktop view */
-    @media (min-width: 769px) {
-      ul {
-        flex-direction: row;
-        justify-content: flex-start;
-        background-color: #fff;
-      }
-
-      li {
-        margin: 5px;
-      }
-
-      .header-bar {
-        flex-direction: row;
-        align-items: center;
-        padding: 0 20px;
-      }
-
-      .search-bar {
-        width: 250px;
-      }
+    @media (min-width:769px) {
+      ul { flex-direction:row; justify-content:flex-start; background-color:#fff; }
+      li { margin:5px; }
+      .header-bar { flex-direction:row; align-items:center; padding:0 20px; }
+      .search-bar { width:250px; }
     }
   </style>
 </head>
 <body>
-  <div class="header-bar">
-    <div class="left-section">
-      <div class="profile-upload">
-        <img id="profilePic" src="default-avatar.png" alt="Profile">
-        <input type="file" id="uploadInput" accept="image/*">
-        <label for="uploadInput" class="upload-label">+</label>
-      </div>
-      <div class="nav-arrows">
-        <button id="backBtn">←</button>
-        <button id="forwardBtn">→</button>
-      </div>
+<div class="header-bar">
+  <div class="left-section">
+    <div class="profile-upload">
+      <img id="profilePic" src="default-avatar.png" alt="Profile">
+      <input type="file" id="uploadInput" accept="image/*">
+      <label for="uploadInput" class="upload-label">+</label>
     </div>
-    <div class="search-container">
-      <input class="search-bar" type="search" placeholder="Search...">
-      <button class="search-btn">Search</button>
+    <div class="nav-arrows">
+      <button id="backBtn">←</button>
+      <button id="forwardBtn">→</button>
     </div>
   </div>
+  <div class="search-container">
+    <input class="search-bar" type="search" placeholder="Search...">
+    <button class="search-btn">Search</button>
+  </div>
+</div>
 
-  <br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br>
 
-  <ul>
-    <li><a class="home-btn" href="doc1">Home</a></li>
-    <li><a class="home-btn" href="chat.html">Chat</a></li>
-    <li><a class="home-btn" href="doc1">Explore</a></li>
-    <li><a class="home-btn" href="doc1">Find</a></li>
-    <li><a class="home-btn" href="doc1">Create</a></li>
-    <li><a class="home-btn" href="doc1">Read</a></li>
-    <li><a class="home-btn" href="help.html">Help</a></li>
-  </ul>
-  <hr>
+<ul>
+  <li><a class="home-btn" href="doc1">Home</a></li>
+  <li><a class="home-btn" href="chat.html">Chat</a></li>
+  <li><a class="home-btn" href="doc1">Explore</a></li>
+  <li><a class="home-btn" href="doc1">Find</a></li>
+  <li><a class="home-btn" href="doc1">Create</a></li>
+  <li><a class="home-btn" href="doc1">Read</a></li>
+  <li><a class="home-btn" href="help.html">Help</a></li>
+</ul>
+<hr>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-storage.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-storage.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDWRSdDveag6AQIaCP4SR5X5caMyMiiktk",
-      authDomain: "collection-abae0.firebaseapp.com",
-      projectId: "collection-abae0",
-      storageBucket: "collection-abae0.appspot.com",
-      messagingSenderId: "721235736494",
-      appId: "1:721235736494:web:8e81c5cf9cb633383cfa3f",
-      measurementId: "G-ZCR2D4F94L"
-    };
+const firebaseConfig = {
+  apiKey: "AIzaSyDWRSdDveag6AQIaCP4SR5X5caMyMiiktk",
+  authDomain: "collection-abae0.firebaseapp.com",
+  projectId: "collection-abae0",
+  storageBucket: "collection-abae0.appspot.com",
+  messagingSenderId: "721235736494",
+  appId: "1:721235736494:web:8e81c5cf9cb633383cfa3f",
+  measurementId: "G-ZCR2D4F94L"
+};
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const storage = getStorage(app);
-    const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const storage = getStorage(app);
+const db = getFirestore(app);
 
-    const profilePic = document.getElementById("profilePic");
-    const uploadInput = document.getElementById("uploadInput");
+const profilePic = document.getElementById("profilePic");
+const uploadInput = document.getElementById("uploadInput");
 
-    // 🔹 Always load the permanent profile picture from Firebase
-    async function loadProfilePic(user) {
-      if (!user) {
-        const saved = localStorage.getItem("profilePic");
-        profilePic.src = saved || "default-avatar.png";
-        return;
-      }
-
-      // Try Auth photoURL first
-      if (user.photoURL) {
-        profilePic.src = user.photoURL;
-        return;
-      }
-
-      // Fallback: Firestore
-      try {
-        const docSnap = await getDoc(doc(db, "users", user.uid));
-        if (docSnap.exists() && docSnap.data().photoURL) {
-          profilePic.src = docSnap.data().photoURL;
-        } else {
-          profilePic.src = "default-avatar.png";
-        }
-      } catch (err) {
-        console.error("Error loading profile picture:", err);
-        profilePic.src = "default-avatar.png";
-      }
+// Load profile picture permanently
+async function loadProfilePic(user){
+  if(!user){
+    const saved = localStorage.getItem("profilePic");
+    profilePic.src = saved || "default-avatar.png";
+    return;
+  }
+  if(user.photoURL){
+    profilePic.src = user.photoURL;
+    return;
+  }
+  try{
+    const docSnap = await getDoc(doc(db,"users",user.uid));
+    if(docSnap.exists() && docSnap.data().photoURL){
+      profilePic.src = docSnap.data().photoURL;
+    } else {
+      profilePic.src = "default-avatar.png";
     }
+  } catch(err){
+    console.error("Error loading profile picture:", err);
+    profilePic.src = "default-avatar.png";
+  }
+}
 
-    onAuthStateChanged(auth, async (user) => {
-      localStorage.removeItem("profilePic"); // Clear local preview if logged in
-      await loadProfilePic(user);
-    });
+onAuthStateChanged(auth, async (user)=>{
+  localStorage.removeItem("profilePic");
+  await loadProfilePic(user);
+});
 
-    // 🔹 Upload new profile picture
-    uploadInput.addEventListener("change", async (event) => {
-      const file = event.target.files[0];
-      if (!file) return alert("No file selected.");
+// Upload new profile picture
+uploadInput.addEventListener("change", async (event)=>{
+  const file = event.target.files[0];
+  if(!file) return alert("No file selected.");
 
-      const user = auth.currentUser;
-      if (!user) {
-        // Logged-out preview
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          profilePic.src = e.target.result;
-          localStorage.setItem("profilePic", e.target.result);
-        };
-        reader.readAsDataURL(file);
-        return;
-      }
+  // Preview immediately
+  const reader = new FileReader();
+  reader.onload = e => profilePic.src = e.target.result;
+  reader.readAsDataURL(file);
 
-      try {
-        const storageRef = ref(storage, `profilePics/${user.uid}`);
-        await uploadBytes(storageRef, file);
-        const url = await getDownloadURL(storageRef);
+  const user = auth.currentUser;
+  if(!user){
+    localStorage.setItem("profilePic", URL.createObjectURL(file));
+    return;
+  }
 
-        await updateProfile(user, { photoURL: url });
-        await setDoc(doc(db, "users", user.uid), { photoURL: url }, { merge: true });
+  try{
+    const storageRef = ref(storage, `profilePics/${user.uid}`);
+    await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(storageRef);
+    await updateProfile(user, {photoURL:url});
+    await setDoc(doc(db,"users",user.uid), {photoURL:url},{merge:true});
+    profilePic.src = url; // update after upload
+  } catch(err){
+    console.error(err);
+    alert("Upload failed: "+err.message);
+  }
+});
 
-        profilePic.src = url;
-      } catch (err) {
-        console.error(err);
-        alert("Upload failed: " + err.message);
-      }
-    });
+document.getElementById("backBtn").addEventListener("click", ()=>window.history.back());
+document.getElementById("forwardBtn").addEventListener("click", ()=>window.history.forward());
 
-    document.getElementById("backBtn").addEventListener("click", () => window.history.back());
-    document.getElementById("forwardBtn").addEventListener("click", () => window.history.forward());
-
-    document.querySelector(".search-btn").addEventListener("click", () => {
-      const query = document.querySelector(".search-bar").value;
-      alert("Searching for: " + query);
-    });
-  </script>
+document.querySelector(".search-btn").addEventListener("click", ()=>{
+  const query = document.querySelector(".search-bar").value;
+  alert("Searching for: "+query);
+});
+</script>
 </body>
 </html>
