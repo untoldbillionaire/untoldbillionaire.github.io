@@ -145,9 +145,6 @@ padding:15px 40px;
 </head>
 
 <body>
-<audio id="birthdaySong" loop>
-    <source src="https://pixabay.com/music/happy-childrens-tunes-happy-birthday-513146/" type="audio/mpeg">
-</audio>
 <div id="start">
 <button onclick="showCard()">🎁 Click 🎁</button>
 </div>
@@ -164,9 +161,39 @@ Jackline 🎂❤️
 </div>
 
 <script>
-function showCard(){
-document.getElementById("start").style.display="none";
-document.getElementById("card").style.display="block";
+function showCard() {
+    document.getElementById("start").style.display = "none";
+    document.getElementById("card").style.display = "block";
+    playBirthdaySong();
+}
+    function playBirthdaySong() {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AudioContext();
+
+    const notes = [
+        [264,300],[264,300],[297,600],[264,600],[352,600],[330,900],
+        [264,300],[264,300],[297,600],[264,600],[396,600],[352,900],
+        [264,300],[264,300],[528,600],[440,600],[352,600],[330,600],[297,900],
+        [466,300],[466,300],[440,600],[352,600],[396,600],[352,1200]
+    ];
+
+    let t = ctx.currentTime;
+
+    notes.forEach(([freq, dur]) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.frequency.value = freq;
+        osc.type = "sine";
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(t);
+        osc.stop(t + dur / 1000);
+
+        t += dur / 1000;
+    });
 }
 
 function createSnow(){
