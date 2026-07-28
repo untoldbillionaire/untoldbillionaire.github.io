@@ -1,1 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Jackline</title>
 
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+font-family:Arial,sans-serif;
+}
+
+/* First Screen */
+#start{
+text-align:center;
+}
+
+button{
+padding:18px 45px;
+font-size:25px;
+border:none;
+border-radius:50px;
+cursor:pointer;
+font-weight:bold;
+color:white;
+background:linear-gradient(45deg,#ff0066,#ff9900,#00ccff);
+background-size:300%;
+animation:buttonGlow 3s infinite;
+box-shadow:0 0 25px gold;
+}
+
+@keyframes buttonGlow{
+0%{background-position:0%;}
+50%{background-position:100%;}
+100%{background-position:0%;}
+}
+
+#card{
+display:none;
+position:relative;
+}
+
+/* Glow */
+.glow{
+position:absolute;
+width:330px;
+height:200px;
+background:#00ffff;
+filter:blur(60px);
+z-index:-1;
+animation:pulse 2s infinite;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+}
+
+@keyframes pulse{
+0%,100%{
+opacity:.3;
+transform:translate(-50%,-50%) scale(1);
+}
+50%{
+opacity:1;
+transform:translate(-50%,-50%) scale(1.2);
+}
+}
+
+/* Card */
+.box{
+width:320px;
+height:190px;
+background:linear-gradient(145deg,#ff4d6d,#ffb347);
+border-radius:20px;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+transform:rotateX(12deg) rotateY(-12deg);
+box-shadow:
+0 20px 35px rgba(0,0,0,.6),
+0 0 25px white;
+animation:float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+0%,100%{
+transform:rotateX(12deg) rotateY(-12deg) translateY(0);
+}
+50%{
+transform:rotateX(12deg) rotateY(-12deg) translateY(-10px);
+}
+}
+
+h1{
+font-size:2rem;
+color:white;
+text-shadow:0 0 10px white,
+0 0 20px yellow,
+0 0 35px hotpink;
+}
+
+.snow{
+position:absolute;
+top:-10px;
+border-radius:50%;
+pointer-events:none;
+animation:fall linear forwards;
+}
+
+@keyframes fall{
+to{
+transform:translateY(110vh) rotate(360deg);
+opacity:0;
+}
+}
+
+/* Mobile */
+@media(max-width:480px){
+.box{
+width:90vw;
+height:180px;
+}
+h1{
+font-size:1.7rem;
+}
+button{
+font-size:22px;
+padding:15px 40px;
+}
+}
+</style>
+</head>
+
+<body>
+
+<div id="start">
+<button onclick="showCard()">🎁 Click 🎁</button>
+</div>
+
+<div id="card">
+<div class="glow"></div>
+
+<div class="box">
+<h1>
+🎉 Happy Birthday<br>
+Jackline 🎂❤️
+</h1>
+</div>
+</div>
+
+<script>
+function showCard(){
+document.getElementById("start").style.display="none";
+document.getElementById("card").style.display="block";
+}
+
+function createSnow(){
+const snow=document.createElement("div");
+snow.classList.add("snow");
+
+snow.style.left=Math.random()*window.innerWidth+"px";
+
+let size=Math.random()*12+6;
+snow.style.width=size+"px";
+snow.style.height=size+"px";
+
+let colors=[
+"#ff0000",
+"#00ff00",
+"#00ffff",
+"#ffff00",
+"#ff00ff",
+"#ffffff",
+"#ff8800"
+];
+
+snow.style.background=
+colors[Math.floor(Math.random()*colors.length)];
+
+snow.style.animationDuration=
+(Math.random()*5+5)+"s";
+
+document.body.appendChild(snow);
+
+setTimeout(()=>{
+snow.remove();
+},10000);
+}
+
+setInterval(createSnow,120);
+</script>
+
+</body>
+</html>
