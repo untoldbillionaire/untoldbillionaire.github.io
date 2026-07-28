@@ -164,7 +164,9 @@ Jackline 🎂❤️
 function showCard() {
     document.getElementById("start").style.display = "none";
     document.getElementById("card").style.display = "block";
+
     playBirthdaySong();
+    setInterval(playBirthdaySong, 16000);
 }
     function playBirthdaySong() {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -196,6 +198,7 @@ function showCard() {
         osc.stop(t + dur / 1000);
 
         t += dur / 1000;
+        setInterval(playBirthdaySong, 16000);
     });
 }
 
